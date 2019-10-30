@@ -1,0 +1,2 @@
+Pour display METAR and TAF: Fira code font
+Pour le reste: Asap font

@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    index
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-12 col-md-8 mt-4">
+        <form>
+            <input class="form-control form-control-lg" type="text" placeholder="ex: Montreal, YMX, CYQB">
+            <div class="h6 sm-indication mt-1 ml-1">Enter airport code or name</div>
+        </form>
+    </div>
+    <div class="col-12 col-md-4 mt-4">
+        Aéroport International de Mirabel
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-8 mt-4">
+        <table class="table table-bordered shadow-sm">
+            <thead>
+                <tr>
+                    <th class = "fix-broken-table1">METAR 1800Z</td>
+                    <th class = "fix-broken-table2" contenteditable="true" type="number" id="w-direction">360</td>
+                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength">20</td>
+                </tr>
+            </thead>
+        </table>
+        <div class="container">
+            <div class="row">
+                <div class="fix-broken-table1 h6 table-explan">
+                    Runway
+                </div>
+                <div class="fix-broken-table2 h6 table-explan">
+                    Head (+) /tailwind (-)
+                </div>
+                <div class="fix-broken-table2 h6 table-explan">
+                    Crosswind
+                </div>
+                <div class="fix-broken-table2 h6 table-explan">
+                    Min CRFI
+                </div>
+            </div>
+        </div>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                  <td class="fix-broken-table1">06</td>
+                  <td class="fix-broken-table2">5 kts</td>
+                  <td class="fix-broken-table2">8 kts</td>
+                  <td class="fix-broken-table2">0.29</td>
+                </tr>
+                <tr>
+                  <td class="fix-broken-table1">24</td>
+                  <td class="fix-broken-table2">-5 kts</td>
+                  <td class="fix-broken-table2">8 kts</td>
+                  <td class="fix-broken-table2">0.29</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-12 col-md-4 mt-4 fira h6">
+        METAR:<br>
+        CYMX 290300Z 03003KT 350V060 15SM R06/3000V5000FT/U MIFG FEW002 FEW016 06/06 A3020 RMK SF1SC1 SLP231
+    </div>
+
+</div>
+<script>
+    // Prevent enter to be pressed in the contenteditable table
+   // var contenteditable = document.getElementsByClassName()
+    document.getElementById('w-direction').addEventListener('keypress', (evt) => {
+        if (evt.which === 13) {
+            evt.preventDefault();
+        }
+    });
+
+    document.getElementById('w-strength').addEventListener('keypress', (evt) => {
+        if (evt.which === 13) {
+            evt.preventDefault();
+        }
+    });
+
+    // document.getElementById('w-direction')
+</script>
+{% endblock %}

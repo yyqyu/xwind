@@ -1,0 +1,1 @@
+FLASK_APP=fsksc.server.app:create_fsksc_app
