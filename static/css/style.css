@@ -56,3 +56,7 @@ a.white-hover:active {
     margin-top: 1px;
     margin-bottom: 1px;
 }
+
+.vert-center{
+    vertical-align: text-bottom;
+}

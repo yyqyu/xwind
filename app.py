@@ -53,8 +53,7 @@ def index():
         taf_text = format_taf(last_taf_raw(ident))
         airport_name = get_name(ident)
         wind_dir = wind_direction(ident)
-
-        print(test)
+        print(wind_dir)
         return render_template("index.html", metar_text=metar_text, taf_text=taf_text, airport_name=airport_name, wind_dir=wind_dir)
     else:
         return render_template("index.html")
