@@ -1,2 +1,12 @@
 Pour display METAR and TAF: Fira code font
 Pour le reste: Asap font
+
+
+SQL DATABASE:
+-2 = balloon_port
+-1 = seaplane_base
+0 = Close
+1 = Heliport
+2 = small airport
+3 = medium airport
+4 = large airport

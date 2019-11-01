@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required, lookup
+from xwind import last_metar_raw, last_taf_raw, check_if_exist, check_local_code, search, get_name, login_required, wind_direction, format_taf
 
 # Configure application
 app = Flask(__name__)
@@ -31,16 +31,33 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# TODO
+
 # Configure CS50 Library to use SQLite database
-# db = SQL("sqlite:///finance.db")
+db = SQL("sqlite:///database/xwind.db")
 
 
-@app.route("/")
-# @login_required
+@app.route("/", methods=["GET", "POST"])
 def index():
+    if request.method == 'POST':
+        station = request.form.get("station")
 
-    return render_template("index.html")
+        try:
+            ident = check_if_exist(station)
+        except Exception:
+            try:
+                ident = check_local_code(station)
+            except Exception:
+                ident = search(station)
+
+        metar_text = last_metar_raw(ident)
+        taf_text = format_taf(last_taf_raw(ident))
+        airport_name = get_name(ident)
+        wind_dir = wind_direction(ident)
+
+        print(test)
+        return render_template("index.html", metar_text=metar_text, taf_text=taf_text, airport_name=airport_name, wind_dir=wind_dir)
+    else:
+        return render_template("index.html")
 
 
 ''' def errorhandler(e):

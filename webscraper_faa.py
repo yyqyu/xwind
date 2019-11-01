@@ -50,7 +50,5 @@ def main():
         file.write(to_write)
 
 
-
-
 if __name__ == "__main__":
     main()

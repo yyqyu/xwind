@@ -4,6 +4,7 @@
 
 .fira {
     font-family: 'Fira Code', sans-serif;
+    font-size: 85%;
 }
 
 .test {
@@ -49,4 +50,9 @@ a.white-hover:active {
 
 .table-explan {
     font-size: small;
+}
+
+.formatting{
+    margin-top: 1px;
+    margin-bottom: 1px;
 }

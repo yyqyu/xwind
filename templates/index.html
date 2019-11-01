@@ -7,13 +7,13 @@
 {% block main %}
 <div class="row">
     <div class="col-12 col-md-8 mt-4">
-        <form>
-            <input class="form-control form-control-lg" type="text" placeholder="ex: Montreal, YMX, CYQB">
+        <form action="/" method="post">
+            <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: Montreal, YMX, CYQB">
             <div class="h6 sm-indication mt-1 ml-1">Enter airport code or name</div>
         </form>
     </div>
-    <div class="col-12 col-md-4 mt-4">
-        Aéroport International de Mirabel
+    <div class="col-12 col-md-4 mt-4 vert-bottom">
+        {{ airport_name }}
     </div>
 </div>
 
@@ -61,9 +61,11 @@
             </tbody>
         </table>
     </div>
-    <div class="col-12 col-md-4 mt-4 fira h6">
-        METAR:<br>
-        CYMX 290300Z 03003KT 350V060 15SM R06/3000V5000FT/U MIFG FEW002 FEW016 06/06 A3020 RMK SF1SC1 SLP231
+    <div class="col-12 col-md-4 mt-4 fira h6 formatting">
+        <p class = "formatting">{{ metar_text }}</p><br>
+        {% for row in taf_text %}
+        <p class = "formatting">{{ row }}</p>
+        {% endfor %}
     </div>
 
 </div>
