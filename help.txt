@@ -1,0 +1,37 @@
+# Create apip install -r requirements.txt new virtualenv named "myproject"
+# Python 3.3+
+$ python3 -m venv myproject
+
+# Activate the virtualenv (OS X & Linux)  (need to do each time I work on project)
+$ source myproject/bin/activate
+
+# To stop the virtual environment
+$ deactivate
+
+# To run a flask application (application.py being the name of the flask application)
+$ export FLASK_APP=application.py
+$ flask run
+
+# To create a requirements.txt to freeze dependencies and have the right versions
+$ pip freeze > requirements.txt
+
+# To install dependencies based on a requirements.txt file
+$ pip install -r requirements.txt
+
+--------------------------------------------------------------------------------------------------------------
+
+Create a file named flaskenv under the root of your project, put this content into it:
+
+# Replace name of python application
+FLASK_APP=fsksc.server.app:create_fsksc_app
+then install python-dotenv:
+
+$ pip install python-dotenv
+Now the env var should be set automatically when you excute your run command.
+
+
+---------------------------------------------------------------------------------------------------------------
+
+flask run --host=0.0.0.0
+ip: curl ifconfig.me
+port 5000 *forwarded to 192.168.0.151, need to reforward if changed

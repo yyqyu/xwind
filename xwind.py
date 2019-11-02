@@ -1,11 +1,11 @@
 import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
-import os
-import requests
+# import os
+# import requests
 
 from cs50 import SQL
-from flask import redirect, render_template, request, session
+from flask import redirect, session
 from functools import wraps
 
 
@@ -18,9 +18,11 @@ def check_if_exist(station):
     station = station.upper()
 
     if len(station) == 4:
-        icao = db.execute("SELECT ident FROM airports WHERE ident=:station", station=station)[0]["ident"]
-    elif len(station) == 3:
-        icao = db.execute("SELECT ident FROM airports WHERE iata_code =:station", station=station)[0]["ident"]
+        icao = db.execute("SELECT ident FROM airports WHERE ident=:station",
+                          station=station)[0]["ident"]
+    else:
+        icao = db.execute("SELECT ident FROM airports WHERE "
+                          "iata_code=:station", station=station)[0]["ident"]
 
     return icao
 
@@ -28,7 +30,8 @@ def check_if_exist(station):
 # Check if station match with a local_code
 def check_local_code(station):
     station = station.upper()
-    icao = db.execute("SELECT ident FROM airports WHERE local_code=:station", station=station)[0]["ident"]
+    icao = db.execute("SELECT ident FROM airports WHERE local_code=:station",
+                      station=station)[0]["ident"]
 
     return icao
 
@@ -39,11 +42,13 @@ def search(station):
     n = len(station) + 1
     while True:
         try:
-            icao = db.execute(f"SELECT ident FROM airports WHERE name LIKE '%{station[:n]}%'ORDER BY type DESC")[0]["ident"]
+            ident = db.execute(
+                "SELECT ident FROM airports WHERE name LIKE "
+                f"'%{station[:n]}%' ORDER BY type DESC")[0]["ident"]
             break
         except Exception:
             n = n - 1
-    return icao
+    return ident
 
 
 # Retrieve the raw text of last available TAF
@@ -108,7 +113,9 @@ def format_taf(raw_text):
 
 # Get name of  matching airport
 def get_name(ident):
-    name = db.execute("SELECT name FROM airports WHERE ident = :ident", ident=ident)[0]["name"]
+    name = db.execute(
+        "SELECT name FROM airports WHERE ident = :ident",
+        ident=ident)[0]["name"]
     return name
 
 
@@ -123,7 +130,7 @@ def login_required(f):
     return decorated_function
 
 
-# Create a list of all existing winds in METAR and TAF
+# Create a list of all existing wind directions in METAR and TAF
 def wind_direction(ident):
     winddir = []
     url_response_metar = urllib.request.urlopen(
@@ -159,10 +166,85 @@ def wind_direction(ident):
         for taf in root_taf.findall('data/TAF/forecast'):
             try:
                 winddir.append(taf.find('wind_dir_degrees').text)
-            except:
+            except Exception:
                 continue
 
     return winddir
+
+
+# Create a list of all existing wind strength in METAR and TAF
+def wind_strength(ident):
+    windstr = []
+    url_response_metar = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=metars"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_metar = ET.fromstring(url_response_metar.read())
+
+    if not (root_metar.findall('data/METAR')):
+        windstr.append(" ")
+    else:
+        windstr.append(root_metar.find('data/METAR/wind_speed_kt').text)
+
+    url_response_taf = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=tafs"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_taf = ET.fromstring(url_response_taf.read())
+
+    if not (root_taf.findall('data/TAF')):
+        windstr.append(" ")
+    else:
+        for taf in root_taf.findall('data/TAF/forecast'):
+            try:
+                windstr.append(taf.find('wind_speed_kt').text)
+            except Exception:
+                continue
+
+    return windstr
+
+
+''' TODO
+def weather_time(ident):
+    url_response = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=tafs"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=12"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root = ET.fromstring(url_response.read())
+
+    if not (root.find('data/TAF')):
+        raw_text = " "
+    else:
+        raw_text = root.find('data/TAF/raw_text').text
+
+    return raw_text '''
+
+
+def runways(ident):
+    runway_list = []
+    rwys = db.execute(
+        "SELECT DISTINCT runways.le_ident, runways.he_ident "
+        "FROM runways, airports "
+        "WHERE runways.airport_ident=:ident "
+        "ORDER BY length_ft DESC", ident=ident)
+    for r in rwys:
+        runway_list.append(r)
+    return runway_list
 
 
 '''def lookup(symbol):
@@ -188,9 +270,7 @@ def wind_direction(ident):
         return None'''
 
 
-''' def apology(message, code=400):
-    """Render message as an apology to user."""
-    def escape(s):
+'''def escape(s):
         """
         Escape special characters.
 
@@ -200,4 +280,5 @@ def wind_direction(ident):
                          ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
             s = s.replace(old, new)
         return s
-    return render_template("apology.html", top=code, bottom=escape(message)), code '''
+    return render_template("apology.html", top=code,
+                           bottom=escape(message)), code'''

@@ -1,13 +1,16 @@
-import os
+# import os
 
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask import Flask, render_template, request
 from flask_session import Session
 from tempfile import mkdtemp
-from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
+# from werkzeug.exceptions import (default_exceptions, HTTPException,
+#                                  InternalServerError)
+# from werkzeug.security import check_password_hash, generate_password_hash
 
-from xwind import last_metar_raw, last_taf_raw, check_if_exist, check_local_code, search, get_name, login_required, wind_direction, format_taf
+from xwind import (last_metar_raw, last_taf_raw, check_if_exist,
+                   check_local_code, search, get_name, runways,
+                   wind_direction, format_taf, wind_strength)
 
 # Configure application
 app = Flask(__name__)
@@ -41,20 +44,28 @@ def index():
     if request.method == 'POST':
         station = request.form.get("station")
 
-        try:
-            ident = check_if_exist(station)
-        except Exception:
+        if len(station) <= 4:
             try:
-                ident = check_local_code(station)
+                ident = check_if_exist(station)
             except Exception:
-                ident = search(station)
+                try:
+                    ident = check_local_code(station)
+                except Exception:
+                    ident = search(station)
+        else:
+            ident = search(station)
 
         metar_text = last_metar_raw(ident)
         taf_text = format_taf(last_taf_raw(ident))
         airport_name = get_name(ident)
         wind_dir = wind_direction(ident)
-        print(wind_dir)
-        return render_template("index.html", metar_text=metar_text, taf_text=taf_text, airport_name=airport_name, wind_dir=wind_dir)
+        wind_str = wind_strength(ident)
+        rwy_list = runways(ident)
+        print(rwy_list)
+        return render_template(
+            "index.html", metar_text=metar_text, taf_text=taf_text,
+            airport_name=airport_name, wind_dir=wind_dir, wind_str=wind_str,
+            rwy_list=rwy_list)
     else:
         return render_template("index.html")
 

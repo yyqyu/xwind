@@ -21,15 +21,18 @@
     <div class="col-12 col-md-8 mt-4">
         <table class="table table-bordered shadow-sm">
             <thead>
+                {% if rwy_list is defined %}
                 <tr>
                     <th class = "fix-broken-table1">METAR 1800Z</td>
-                    <th class = "fix-broken-table2" contenteditable="true" type="number" id="w-direction">360</td>
-                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength">20</td>
+                    <th class = "fix-broken-table2" contenteditable="true" type="number" id="w-direction">{{ wind_dir | first }}</td>
+                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength">{{ wind_str | first }}</td>
                 </tr>
+                {% endif %}
             </thead>
         </table>
         <div class="container">
             <div class="row">
+                {% if rwy_list is defined %}
                 <div class="fix-broken-table1 h6 table-explan">
                     Runway
                 </div>
@@ -42,22 +45,25 @@
                 <div class="fix-broken-table2 h6 table-explan">
                     Min CRFI
                 </div>
+                {% endif %}
             </div>
         </div>
         <table class="table table-sm table-bordered">
             <tbody>
+                {% for rwy in rwy_list %}
                 <tr>
-                  <td class="fix-broken-table1">06</td>
+                  <td class="fix-broken-table1">{{ rwy.le_ident }}</td>
                   <td class="fix-broken-table2">5 kts</td>
                   <td class="fix-broken-table2">8 kts</td>
                   <td class="fix-broken-table2">0.29</td>
                 </tr>
                 <tr>
-                  <td class="fix-broken-table1">24</td>
+                  <td class="fix-broken-table1">{{ rwy.he_ident }}</td>
                   <td class="fix-broken-table2">-5 kts</td>
                   <td class="fix-broken-table2">8 kts</td>
                   <td class="fix-broken-table2">0.29</td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -81,6 +87,15 @@
     document.getElementById('w-strength').addEventListener('keypress', (evt) => {
         if (evt.which === 13) {
             evt.preventDefault();
+        }
+    });
+
+    208
+
+    $("input").keypress(function(event) {
+        if (event.which == 13) {
+            event.preventDefault();
+            $("form").submit();
         }
     });
 
