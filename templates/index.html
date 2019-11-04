@@ -156,8 +156,6 @@
             var wx_time = document.getElementById("wx_time")
             console.log(data);
             wx_time.innerHTML = data[1];
-            wx_time.classList.add("seen");
-            wx_time.classList.remove("hidden");
             document.getElementById("table_header").classList.add("seen");
             document.getElementById("table_header").classList.remove("hidden")
         });
@@ -168,8 +166,8 @@
             var wx_type = document.getElementById("wx_type")
             console.log(data);
             wx_type.innerHTML = data[1];
-            wx_type.classList.add("seen");
-            wx_type.classList.remove("hidden");
+            wxtypeandtime.classList.add("seen");
+            wxtypeandtime.classList.remove("hidden");
         
         });
     });
