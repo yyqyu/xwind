@@ -1,18 +1,38 @@
 import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
-import datetime
+
 # import os
-# import requests
 
 from cs50 import SQL
-from flask import redirect, session
+from flask import redirect, session, request
 from functools import wraps
 from itertools import islice
 
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///database/xwind.db")
+
+
+# Get ident code
+def get_ident(station):
+    if not request.form.get("station"):
+        station = request.args.get("station")
+    else:
+        request.form.get("station")
+
+    if len(station) <= 4:
+        try:
+            ident = check_if_exist(station)
+        except Exception:
+            try:
+                ident = check_local_code(station)
+            except Exception:
+                ident = search(station)
+    else:
+        ident = search(station)
+
+    return ident
 
 
 # Check if station match with ICAO or IATA ident
@@ -217,7 +237,7 @@ def wind_strength(ident):
 
 
 # Get list of each weather time
-def get_weather_times(ident):
+def weather_times(ident):
     wx_time = []
     url_response_metar = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
@@ -264,7 +284,7 @@ def get_weather_times(ident):
 
 
 # Get list of each weather time's type
-def get_weather_types(ident):
+def weather_types(ident):
     wx_type = [] = []
     url_response_metar = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
@@ -328,7 +348,7 @@ def weather_time(ident):
         "&hoursBeforeNow=12"                  # required even if latest
         f"&stationString={ident}")            # station ICAO code
 
-    root = ET.fromstring(url_response.read())
+    root = ET.fromstring(url_response.read())json
 
     if not (root.find('data/TAF')):
         raw_text = " "

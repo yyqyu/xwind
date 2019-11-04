@@ -1,17 +1,17 @@
 # import os
+import json
 
 from cs50 import SQL
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 # from werkzeug.exceptions import (default_exceptions, HTTPException,
 #                                  InternalServerError)
 # from werkzeug.security import check_password_hash, generate_password_hash
 
-from xwind import (last_metar_raw, last_taf_raw, check_if_exist,
-                   check_local_code, search, get_name, runways,
+from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
-                   get_weather_times, get_weather_types)
+                   weather_times, weather_types, get_ident)
 
 # Configure application
 app = Flask(__name__)
@@ -43,35 +43,65 @@ db = SQL("sqlite:///database/xwind.db")
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == 'POST':
-        station = request.form.get("station")
-
-        if len(station) <= 4:
-            try:
-                ident = check_if_exist(station)
-            except Exception:
-                try:
-                    ident = check_local_code(station)
-                except Exception:
-                    ident = search(station)
-        else:
-            ident = search(station)
+        ident = get_ident(request.form.get("station"))
 
         metar_text = last_metar_raw(ident)
         taf_text = format_taf(last_taf_raw(ident))
         airport_name = get_name(ident)
-        wind_dir = wind_direction(ident)
-        wind_str = wind_strength(ident)
-        rwy_list = runways(ident)
-        wx_time = get_weather_times(ident)
-        wx_type = get_weather_types(ident)
-        print(wx_time)
-        print(wx_type)
-        return render_template(
-            "index.html", metar_text=metar_text, taf_text=taf_text,
-            airport_name=airport_name, wind_dir=wind_dir, wind_str=wind_str,
-            rwy_list=rwy_list, wx_type=wx_type, wx_time=wx_time)
+
+        return jsonify(metar_text, taf_text, airport_name, ident)
     else:
         return render_template("index.html")
+
+
+# Check DB for runway list
+@app.route("/get_rwy_list", methods=["POST"])
+def rwy_list():
+    ident = get_ident(request.args.get("station"))
+
+    rwy_list = runways(ident)
+
+    return jsonify(rwy_list)
+
+
+# Ajax functions to return wind directions
+@app.route("/get_wind_dir", methods=["POST"])
+def get_wind_dir():
+    ident = get_ident(request.args.get("station"))
+
+    wind_dir = wind_direction(ident)
+
+    return jsonify(wind_dir)
+
+
+# Ajax functions to return wind strength
+@app.route("/get_wind_str", methods=["POST"])
+def get_wind_str():
+    ident = get_ident(request.args.get("station"))
+
+    wind_str = wind_strength(ident)
+
+    return jsonify(wind_str)
+
+
+# Ajax functions to return weather wind time
+@app.route("/get_wx_times", methods=["POST"])
+def get_wx_times():
+    ident = get_ident(request.args.get("station"))
+
+    wx_times = weather_times(ident)
+
+    return jsonify(wx_times)
+
+
+# Ajax functions to return weather wind time
+@app.route("/get_wx_types", methods=["POST"])
+def get_wx_types():
+    ident = get_ident(request.args.get("station"))
+
+    wx_types = weather_types(ident)
+
+    return jsonify(wx_types)
 
 
 ''' def errorhandler(e):

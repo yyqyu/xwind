@@ -7,8 +7,8 @@
 {% block main %}
 <div class="row">
     <div class="col-12 mt-4">
-        <form action="/" method="post">
-            <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: Montreal, YMX, CYQB">
+        <form action="/" method="post" id="stationform">
+            <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: Montreal, YMX, CYQB" id="station">
             <div class="h6 sm-indication mt-1 ml-1">Enter airport code or name</div>
         </form>
     </div>
@@ -21,21 +21,29 @@
 
 <div class="row">
     <div class="col-12 col-md-8 mt-4">
-        <p class ="vert-center">{{ airport_name }}</p>
-        <table class="table table-bordered shadow-sm">
+
+        <p class ="text-center" id="airportname"></p>
+
+        <table class="table table-bordered shadow-sm hidden" id="table_header">
             <thead>
-                {% if rwy_list is defined %}
                 <tr>
-                    <th class = "fix-broken-table1">{{ wx_type | first }} {{ wx_time | first }}</td>
-                    <th class = "fix-broken-table2" contenteditable="true" type="number" id="w-direction">{{ wind_dir | first }}</td>
-                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength">{{ wind_str | first }}</td>
+                    <th class = "fix-broken-table1 hidden" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
+                    <th class = "fix-broken-table2" contenteditable="true" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
+                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
                 </tr>
-                {% endif %}
             </thead>
         </table>
         <div class="container">
             <div class="row">
-                {% if rwy_list is defined %}
+                <div class="col-12 mt mb-3 centered">
+                    {% if rwy_list  %}
+                    <button type="button" class="btn btn-outline-secondary btn-sm mr-4" id="Previous">Previous</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm ml-4" id="Next">Next</button>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+
                 <div class="fix-broken-table1 h6 table-explan">
                     Runway
                 </div>
@@ -48,7 +56,7 @@
                 <div class="fix-broken-table2 h6 table-explan">
                     Min CRFI
                 </div>
-                {% endif %}
+
             </div>
         </div>
         <table class="table table-sm table-bordered">
@@ -70,38 +78,131 @@
             </tbody>
         </table>
     </div>
-    <div class="col-12 col-md-4 mt-4 fira h6 formatting">
-        <p class = "formatting">{{ metar_text }}</p><br>
-        {% for row in taf_text %}
-        <p class = "formatting">{{ row }}</p>
-        {% endfor %}
+    <div class="col-12 col-md-4 mt-4 fira h6 formatting" id="wx">
+        <p class = "formatting" id="metar"></p><br>
+        <ul class = "formatting" id="taf"></ul>
     </div>
 
 </div>
 <script>
-    // Prevent enter to be pressed in the contenteditable table
-   // var contenteditable = document.getElementsByClassName()
-    document.getElementById('w-direction').addEventListener('keypress', (evt) => {
-        if (evt.which === 13) {
-            evt.preventDefault();
+    // Prevent input field to be submitted
+    $('#stationform').submit(function (e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Only numbers allowed in contenteditable table
+    function testCharacter(event) {
+      if ((event.keyCode >= 48 && event.keyCode <= 57 )) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    // Prevent linebreaks in contenteditable table
+    $('#w-direction').on("keypress paste", function (e) {
+        if (this.innerHTML.length >= 3) {
+            e.preventDefault();
+            return false;
         }
     });
 
-    document.getElementById('w-strength').addEventListener('keypress', (evt) => {
-        if (evt.which === 13) {
-            evt.preventDefault();
+    $('#w-strength').on("keypress paste", function (e) {
+        if (this.innerHTML.length >= 3) {
+            e.preventDefault();
+            return false;
         }
     });
+    
+    // Kept just in case, prob won't go this way
+    //$('#stationform').submit(function() {
+    //    $.ajax({
+    //        async: true,
+    //        url: "/?station=" + station.value,
+    //        type: "POST",
+    //        dataType: "json",
+    //        context: document.body,
+    //        success: function(data) {
+    //            $("html").empty().append(data);
+    //       }
+    //    })
+    //});
 
-    208
+    $('#stationform').submit(function() {
+        $.post('/get_wind_dir?station=' + station.value, function(data) {
+            if (data == true) {
+                document.getElementById("w-direction").innerHTML = data[0];
 
-    $("input").keypress(function(event) {
-        if (event.which == 13) {
-            event.preventDefault();
-            $("form").submit();
-        }
+            } else if (data == false) {
+                "TODO";
+            }
+        });
     });
 
-    // document.getElementById('w-direction')
+    $('#stationform').submit(function() {
+        $.post('/get_wind_str?station=' + station.value, function(data) {
+            if (data == true) {
+                document.getElementById("w-strength").innerHTML = data;
+                console.log(data);
+            } else if (data == false) {
+                "TODO";
+            }
+        });
+    });
+
+    $('#stationform').submit(function() {
+        $.post('/get_wx_times?station=' + station.value, function(data) {
+            var wx_time = document.getElementById("wx_time")
+            console.log(data);
+            wx_time.innerHTML = data[1];
+            wx_time.classList.add("seen");
+            wx_time.classList.remove("hidden");
+            document.getElementById("table_header").classList.add("seen");
+            document.getElementById("table_header").classList.remove("hidden")
+        });
+    });
+
+    $('#stationform').submit(function() {
+        $.post('/get_wx_types?station=' + station.value, function(data) {
+            var wx_type = document.getElementById("wx_type")
+            console.log(data);
+            wx_type.innerHTML = data[1];
+            wx_type.classList.add("seen");
+            wx_type.classList.remove("hidden");
+        
+        });
+    });
+
+    $('#stationform').submit(function() {
+        $.post('/get_rwy_list?station=' + station.value, function(data) {
+            if (data == true) {
+                document.getElementById("w-strength").innerHTML = data;
+                console.log(data);
+            } else if (data == false) {
+                "TODO";
+            }
+        });
+    });
+
+    // Async call for metar, taf, name, and ident
+    $('#stationform').submit(function() {
+        $.post('/?station=' + station.value, function(data) {
+            document.getElementById("airportname").innerHTML = (data[2] + " - " + data[3]);
+            document.getElementById("metar").innerHTML = data[0];
+            
+
+            var newElement = 'p';
+            var i = 0;
+            var taf = data[1];
+            var taf_length = data[1].length;
+            taf.forEach(function(item){
+                $("#taf").append("<li>" + item + "</li>");
+
+            });
+
+        });
+    });
+
 </script>
 {% endblock %}
