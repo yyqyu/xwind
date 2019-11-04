@@ -10,7 +10,8 @@ from tempfile import mkdtemp
 
 from xwind import (last_metar_raw, last_taf_raw, check_if_exist,
                    check_local_code, search, get_name, runways,
-                   wind_direction, format_taf, wind_strength)
+                   wind_direction, format_taf, wind_strength,
+                   get_weather_times, get_weather_types)
 
 # Configure application
 app = Flask(__name__)
@@ -61,11 +62,14 @@ def index():
         wind_dir = wind_direction(ident)
         wind_str = wind_strength(ident)
         rwy_list = runways(ident)
-        print(rwy_list)
+        wx_time = get_weather_times(ident)
+        wx_type = get_weather_types(ident)
+        print(wx_time)
+        print(wx_type)
         return render_template(
             "index.html", metar_text=metar_text, taf_text=taf_text,
             airport_name=airport_name, wind_dir=wind_dir, wind_str=wind_str,
-            rwy_list=rwy_list)
+            rwy_list=rwy_list, wx_type=wx_type, wx_time=wx_time)
     else:
         return render_template("index.html")
 

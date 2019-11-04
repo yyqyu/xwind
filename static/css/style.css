@@ -58,5 +58,6 @@ a.white-hover:active {
 }
 
 .vert-center{
+    text-align: center;
     vertical-align: text-bottom;
 }

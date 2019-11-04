@@ -6,24 +6,27 @@
 
 {% block main %}
 <div class="row">
-    <div class="col-12 col-md-8 mt-4">
+    <div class="col-12 mt-4">
         <form action="/" method="post">
             <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: Montreal, YMX, CYQB">
             <div class="h6 sm-indication mt-1 ml-1">Enter airport code or name</div>
         </form>
     </div>
+    <!--
     <div class="col-12 col-md-4 mt-4">
-        <p class ="vert-center">{{ airport_name }}</p>
+    
     </div>
+    -->
 </div>
 
 <div class="row">
     <div class="col-12 col-md-8 mt-4">
+        <p class ="vert-center">{{ airport_name }}</p>
         <table class="table table-bordered shadow-sm">
             <thead>
                 {% if rwy_list is defined %}
                 <tr>
-                    <th class = "fix-broken-table1">METAR 1800Z</td>
+                    <th class = "fix-broken-table1">{{ wx_type | first }} {{ wx_time | first }}</td>
                     <th class = "fix-broken-table2" contenteditable="true" type="number" id="w-direction">{{ wind_dir | first }}</td>
                     <th class = "fix-broken-table2" contenteditable="true" id="w-strength">{{ wind_str | first }}</td>
                 </tr>
@@ -55,13 +58,13 @@
                   <td class="fix-broken-table1">{{ rwy.le_ident }}</td>
                   <td class="fix-broken-table2">5 kts</td>
                   <td class="fix-broken-table2">8 kts</td>
-                  <td class="fix-broken-table2">0.29</td>
+                  <td class="fix-broken-table2 CRFI">0.29</td>
                 </tr>
                 <tr>
                   <td class="fix-broken-table1">{{ rwy.he_ident }}</td>
                   <td class="fix-broken-table2">-5 kts</td>
                   <td class="fix-broken-table2">8 kts</td>
-                  <td class="fix-broken-table2">0.29</td>
+                  <td class="fix-broken-table2 CRFI">0.29</td>
                 </tr>
                 {% endfor %}
             </tbody>

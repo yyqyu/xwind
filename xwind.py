@@ -1,12 +1,14 @@
 import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
+import datetime
 # import os
 # import requests
 
 from cs50 import SQL
 from flask import redirect, session
 from functools import wraps
+from itertools import islice
 
 
 # Configure CS50 Library to use SQLite database
@@ -138,7 +140,7 @@ def wind_direction(ident):
         "datasource=metars"                     # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
-        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
         f"&stationString={ident}")            # station ICAO code
 
@@ -154,7 +156,7 @@ def wind_direction(ident):
         "datasource=tafs"                     # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
-        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
         f"&stationString={ident}")            # station ICAO code
 
@@ -180,7 +182,7 @@ def wind_strength(ident):
         "datasource=metars"                     # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
-        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
         f"&stationString={ident}")            # station ICAO code
 
@@ -196,7 +198,7 @@ def wind_strength(ident):
         "datasource=tafs"                     # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
-        "&mostRecentForEachStation=constraint"  # use if only want latest
+        "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
         f"&stationString={ident}")            # station ICAO code
 
@@ -212,6 +214,107 @@ def wind_strength(ident):
                 continue
 
     return windstr
+
+
+# Get list of each weather time
+def get_weather_times(ident):
+    wx_time = []
+    url_response_metar = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=metars"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_metar = ET.fromstring(url_response_metar.read())
+
+    if not (root_metar.findall('data/METAR')):
+        wx_time.append(" ")
+    else:
+        t = (root_metar.find('data/METAR/observation_time').text)[11:-4:]
+        t = t.replace(":", "")
+        wx_time.append(t + "Z")
+
+    url_response_taf = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=tafs"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_taf = ET.fromstring(url_response_taf.read())
+
+    if not (root_taf.findall('data/TAF')):
+        wx_time.append(" ")
+    else:
+        for taf in root_taf.findall('data/TAF/forecast'):
+            try:
+                if taf.find('wind_dir_degrees').text:
+                    y = (taf.find('fcst_time_from').text)[11:-4:]
+                    y = y.replace(":", "")
+                    wx_time.append(y + "Z")
+            except Exception:
+                continue
+
+    return wx_time
+
+
+# Get list of each weather time's type
+def get_weather_types(ident):
+    wx_type = [] = []
+    url_response_metar = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=metars"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_metar = ET.fromstring(url_response_metar.read())
+
+    if not (root_metar.findall('data/METAR')):
+        wx_type.append(" ")
+    else:
+        wx_type.append(root_metar.find('data/METAR/metar_type').text)
+
+    url_response_taf = urllib.request.urlopen(
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=tafs"                     # 'metars' or 'tafs'
+        "&requestType=retrieve"                 # -- don't touch --
+        "&format=xml"                           # -- don't touch --
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=1.25"                  # required even if latest
+        f"&stationString={ident}")            # station ICAO code
+
+    root_taf = ET.fromstring(url_response_taf.read())
+
+    if not (root_taf.findall('data/TAF')):
+        wx_type.append(" ")
+    else:
+        wx_type.append("FROM")
+        for taf in islice(root_taf.findall('data/TAF/forecast'), 1, None):
+            try:
+                if taf.find('wind_dir_degrees').text:
+                    if taf.find('change_indicator').text == "FM":
+                        wx_type.append("FROM")
+                    elif taf.find('change_indicator').text == "TEMPO":
+                        wx_type.append("TEMPO")
+                    elif taf.find('change_indicator').text == "PROB":
+                        if taf.find('change_indicator').text == "30":
+                            wx_type.append("change_indicator")
+                        elif taf.find('change_indicator').text == "40":
+                            wx_type.append("PROB40")
+                    elif taf.find('change_indicator').text == "BECMG":
+                        wx_type.append("BECMG")
+            except Exception:
+                continue
+
+    return wx_type
 
 
 ''' TODO
