@@ -14,7 +14,7 @@
     </div>
     <!--
     <div class="col-12 col-md-4 mt-4">
-    
+
     </div>
     -->
 </div>
@@ -24,7 +24,7 @@
 
         <p class ="text-center" id="airportname"></p>
 
-        <table class="table table-bordered shadow-sm hidden" id="table_header">
+        <table class="table table-bordered shadow-sm hidden" id="time_dir_str">
             <thead>
                 <tr>
                     <th class = "fix-broken-table1 hidden" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
@@ -42,7 +42,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="row">
+            <div class="row hidden" id="table-header">
 
                 <div class="fix-broken-table1 h6 table-explan">
                     Runway
@@ -60,7 +60,7 @@
             </div>
         </div>
         <table class="table table-sm table-bordered">
-            <tbody>
+            <tbody id="rwy_table">
                 {% for rwy in rwy_list %}
                 <tr>
                   <td class="fix-broken-table1">{{ rwy.le_ident }}</td>
@@ -114,7 +114,7 @@
             return false;
         }
     });
-    
+
     // Kept just in case, prob won't go this way
     //$('#stationform').submit(function() {
     //    $.ajax({
@@ -151,16 +151,20 @@
         });
     });
 
+    // Add wx_time to wx_dir_str div
     $('#stationform').submit(function() {
         $.post('/get_wx_times?station=' + station.value, function(data) {
             var wx_time = document.getElementById("wx_time")
             console.log(data);
             wx_time.innerHTML = data[1];
-            document.getElementById("table_header").classList.add("seen");
-            document.getElementById("table_header").classList.remove("hidden")
+            document.getElementById("time_dir_str").classList.add("seen");
+            document.getElementById("time_dir_str").classList.remove("hidden")
+            document.getElementById("table-header").classList.add("seen");
+            document.getElementById("table-header").classList.remove("hidden")
         });
     });
 
+    // Add wx_type to wx_dir_str div
     $('#stationform').submit(function() {
         $.post('/get_wx_types?station=' + station.value, function(data) {
             var wx_type = document.getElementById("wx_type")
@@ -168,7 +172,7 @@
             wx_type.innerHTML = data[1];
             wxtypeandtime.classList.add("seen");
             wxtypeandtime.classList.remove("hidden");
-        
+
         });
     });
 
@@ -188,7 +192,7 @@
         $.post('/?station=' + station.value, function(data) {
             document.getElementById("airportname").innerHTML = (data[2] + " - " + data[3]);
             document.getElementById("metar").innerHTML = data[0];
-            
+
 
             var newElement = 'p';
             var i = 0;
