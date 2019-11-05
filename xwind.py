@@ -89,7 +89,10 @@ def last_metar_raw(ident):
     if not (root.findall('data/METAR')):
         raw_text = "No weather available"
     else:
-        raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
+        if (root.find('data/METAR/metar_type').text) == "METAR":
+            raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
+        elif(root.find('data/METAR/metar_type').text) == "SPECI":
+            raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
 
     return raw_text
 

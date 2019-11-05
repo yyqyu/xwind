@@ -46,8 +46,6 @@ a.white-hover:active {
 }
 
 .formatting{
-    margin-top: 1px;
-    margin-bottom: 1px;
     list-style: none;
     padding: 0;
     border: none;
@@ -74,4 +72,11 @@ a.white-hover:active {
 
 .table-header {
     border-collapse: collapse;
+}
+
+@media only screen and (max-width: 600px) {
+  #wx {
+    margin-left:5vw;
+    max-width: 80vw;
+  }
 }

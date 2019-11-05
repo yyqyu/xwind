@@ -61,20 +61,7 @@
         </div>
         <table class="table table-sm table-bordered">
             <tbody id="rwy_table">
-                {% for rwy in rwy_list %}
-                <tr>
-                  <td class="fix-broken-table1">{{ rwy.le_ident }}</td>
-                  <td class="fix-broken-table2">5 kts</td>
-                  <td class="fix-broken-table2">8 kts</td>
-                  <td class="fix-broken-table2 CRFI">0.29</td>
-                </tr>
-                <tr>
-                  <td class="fix-broken-table1">{{ rwy.he_ident }}</td>
-                  <td class="fix-broken-table2">-5 kts</td>
-                  <td class="fix-broken-table2">8 kts</td>
-                  <td class="fix-broken-table2 CRFI">0.29</td>
-                </tr>
-                {% endfor %}
+
             </tbody>
         </table>
     </div>
@@ -156,7 +143,7 @@
         $.post('/get_wx_times?station=' + station.value, function(data) {
             var wx_time = document.getElementById("wx_time")
             console.log(data);
-            wx_time.innerHTML = data[1];
+            wx_time.innerHTML = data[0];
             document.getElementById("time_dir_str").classList.add("seen");
             document.getElementById("time_dir_str").classList.remove("hidden")
             document.getElementById("table-header").classList.add("seen");
@@ -169,7 +156,7 @@
         $.post('/get_wx_types?station=' + station.value, function(data) {
             var wx_type = document.getElementById("wx_type")
             console.log(data);
-            wx_type.innerHTML = data[1];
+            wx_type.innerHTML = data[0];
             wxtypeandtime.classList.add("seen");
             wxtypeandtime.classList.remove("hidden");
 
@@ -178,14 +165,23 @@
 
     $('#stationform').submit(function() {
         $.post('/get_rwy_list?station=' + station.value, function(data) {
-            if (data == true) {
-                document.getElementById("w-strength").innerHTML = data;
-                console.log(data);
-            } else if (data == false) {
-                "TODO";
-            }
+            $("#rwy_table").empty()
+            var rwy_list = data;
+
+            $.each(rwy_list,function(key,value){
+                $.each(value, function(key2, value2) {
+                    console.log(value)
+                    $("#rwy_table").append(
+                    "<tr>" +
+                    "<td class='fix-broken-table1'>" + value2 + "</td>" +
+                    "<td class='fix-broken-table2'></td>" +
+                    "<td class='fix-broken-table2'></td>" +
+                    "<td class='fix-broken-table2'></td>");
+                });
+            });
         });
     });
+
 
     // Async call for metar, taf, name, and ident
     $('#stationform').submit(function() {
@@ -193,11 +189,8 @@
             document.getElementById("airportname").innerHTML = (data[2] + " - " + data[3]);
             document.getElementById("metar").innerHTML = data[0];
 
-
-            var newElement = 'p';
-            var i = 0;
             var taf = data[1];
-            var taf_length = data[1].length;
+            $("#taf").empty()
             taf.forEach(function(item){
                 $("#taf").append("<li>" + item + "</li>");
 
