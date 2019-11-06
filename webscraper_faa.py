@@ -39,8 +39,8 @@ def main():
                              data=param)
 
     # Print to terminal some info to ensure request went well.
-    print (response.status_code)
-    print (response.headers['Content-Type'])
+    print(response.status_code)
+    print(response.headers['Content-Type'])
 
     to_write = jsbeautifier.beautify(response.text)
 

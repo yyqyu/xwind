@@ -36,10 +36,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 mt mb-3 centered">
-                    {% if rwy_list  %}
-                    <button type="button" class="btn btn-outline-secondary btn-sm mr-4" id="Previous">Previous</button>
-                    <button type="button" class="btn btn-outline-secondary btn-sm ml-4" id="Next">Next</button>
-                    {% endif %}
+                    <button type="button" class="btn btn-outline-secondary btn-sm mr-4 hidden" id="previous">Previous</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm ml-4 hidden" id="next">Next</button>
                 </div>
             </div>
             <div class="row hidden" id="table-header">
@@ -108,17 +106,45 @@
     $('#stationform').submit(function() {
         $.post('/get_wind_dir?station=' + station.value, function(data) {
             var wind_dir = document.getElementById("w-direction");;
-            wind_dir.innerHTML = data[0].padStart(3, '0');
+            var counter = 0;
+            wind_dir.innerHTML = data[counter].padStart(3, '0');
+            $('#next').click(function() {
+                if (counter < (data.length - 1)) {
+                counter++
+                $('#w-direction').html(data[counter].padStart(3, '0'));
+                }
+            })
+            $('#previous').click(function() {
+                if(counter>0){
+                counter--
+                $('#w-direction').html(data[counter].padStart(3, '0'));
+                }
+            })
+
         });
     });
 
-    // Add wind direction to the appropriate field
+    // Add wind strength to the appropriate field
     $('#stationform').submit(function() {
         $.post('/get_wind_str?station=' + station.value, function(data) {
             var wind_str = document.getElementById("w-strength");
-            wind_str.innerHTML = (data[0]);
             // wind_str.innerHTML = (data[0] + ' kt'); <-- If I want to add kt at the end.
             //                                             But what if user manually change winds?
+            var counter = 0;
+            wind_str.innerHTML = data[counter];
+            $('#next').click(function() {
+                if (counter < (data.length - 1)) {
+                counter++
+                $('#w-strength').html(data[counter]);
+                }
+            })
+            $('#previous').click(function() {
+                if(counter>0){
+                counter--
+                $('#w-strength').html(data[counter]);
+                }
+            })
+
         });
     });
 
@@ -126,11 +152,28 @@
     $('#stationform').submit(function() {
         $.post('/get_wx_times?station=' + station.value, function(data) {
             var wx_time = document.getElementById("wx_time");
-            wx_time.innerHTML = data[0];
             document.getElementById("time_dir_str").classList.add("seen");
             document.getElementById("time_dir_str").classList.remove("hidden");
             document.getElementById("table-header").classList.add("seen");
             document.getElementById("table-header").classList.remove("hidden");
+            document.getElementById("previous").classList.add("seen");
+            document.getElementById("previous").classList.remove("hidden");
+            document.getElementById("next").classList.add("seen");
+            document.getElementById("next").classList.remove("hidden");
+            var counter = 0;
+            wx_time.innerHTML = data[counter];
+            $('#next').click(function() {
+                if (counter < (data.length - 1)) {
+                counter++
+                $('#wx_time').html(data[counter]);
+                }
+            })
+            $('#previous').click(function() {
+                if(counter>0){
+                counter--
+                $('#wx_time').html(data[counter]);
+                }
+            })
         });
     });
 
@@ -138,10 +181,22 @@
     $('#stationform').submit(function() {
         $.post('/get_wx_types?station=' + station.value, function(data) {
             var wx_type = document.getElementById("wx_type");
-            wx_type.innerHTML = data[0];
             wxtypeandtime.classList.add("seen");
             wxtypeandtime.classList.remove("hidden");
-
+            var counter = 0;
+            wx_type.innerHTML = data[counter];
+            $('#next').click(function() {
+                if (counter < (data.length - 1)) {
+                counter++
+                $('#wx_type').html(data[counter]);
+                }
+            })
+            $('#previous').click(function() {
+                if(counter>0){
+                counter--
+                $('#wx_type').html(data[counter]);
+                }
+            })
         });
     });
 
@@ -178,6 +233,21 @@
 
             });
 
+        });
+    });
+
+
+    // Async call to get a list of heading in same order as runway_list
+    $('#stationform').submit(function() {
+        $.post('/get_headings_list?station=' + station.value, function(data) {
+            console.log(data)
+            var headings_list = [];
+            $.each(data, function(key, value){
+                $.each(value, function(key2, value2) {
+                    headings_list.push(value2)
+                })
+            })
+            console.log(headings_list)
         });
     });
 

@@ -11,7 +11,7 @@ from tempfile import mkdtemp
 
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
-                   weather_times, weather_types, get_ident)
+                   weather_times, weather_types, get_ident, headings)
 
 # Configure application
 app = Flask(__name__)
@@ -60,6 +60,14 @@ def rwy_list():
     ident = get_ident(request.args.get("station"))
     rwy_list = runways(ident)
     return jsonify(rwy_list)
+
+
+# Check DB for headings list
+@app.route("/get_headings_list", methods=["POST"])
+def headings_list():
+    ident = get_ident(request.args.get("station"))
+    heading_list = headings(ident)
+    return jsonify(heading_list)
 
 
 # Ajax functions to return wind directions

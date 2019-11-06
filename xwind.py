@@ -352,6 +352,18 @@ def runways(ident):
     return runway_list
 
 
+def headings(ident):
+    headings_list = []
+    headings = db.execute(
+        "SELECT DISTINCT runways.le_heading_degT, runways.xhe_heading_degT "
+        "FROM runways, airports "
+        "WHERE runways.airport_ident=:ident "
+        "ORDER BY length_ft DESC", ident=ident)
+    for head in headings:
+        headings_list.append(head)
+    return headings_list
+
+
 '''def escape(s):
         """
         Escape special characters.
