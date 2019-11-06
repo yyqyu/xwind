@@ -28,8 +28,8 @@
             <thead>
                 <tr>
                     <th class = "fix-broken-table1 hidden" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
-                    <th class = "fix-broken-table2" contenteditable="true" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
-                    <th class = "fix-broken-table2" contenteditable="true" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
+                    <th class = "fix-broken-table2 tbcontentedit" contenteditable="true" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
+                    <th class = "fix-broken-table2 tbcontentedit" contenteditable="true" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
                 </tr>
             </thead>
         </table>
@@ -72,13 +72,13 @@
 
 </div>
 <script>
-    // Prevent input field to be submitted
+    // Prevent "station" input field default action
     $('#stationform').submit(function (e) {
         e.preventDefault();
         return false;
     });
 
-    // Only numbers allowed in contenteditable table
+    // Only allow numbers in contenteditable table
     function testCharacter(event) {
       if ((event.keyCode >= 48 && event.keyCode <= 57 )) {
         return true;
@@ -87,75 +87,57 @@
       }
     }
 
-    // Prevent linebreaks in contenteditable table
-    $('#w-direction').on("keypress paste", function (e) {
+
+    // Prevent inputting more than 3 characters
+    $('#w-direction').on("keypress", function (e) {
         if (this.innerHTML.length >= 3) {
             e.preventDefault();
             return false;
         }
     });
 
-    $('#w-strength').on("keypress paste", function (e) {
+    // Prevent inputting more than 3 characters
+    $('#w-strength').on("keypress", function (e) {
         if (this.innerHTML.length >= 3) {
             e.preventDefault();
             return false;
         }
     });
 
-    // Kept just in case, prob won't go this way
-    //$('#stationform').submit(function() {
-    //    $.ajax({
-    //        async: true,
-    //        url: "/?station=" + station.value,
-    //        type: "POST",
-    //        dataType: "json",
-    //        context: document.body,
-    //        success: function(data) {
-    //            $("html").empty().append(data);
-    //       }
-    //    })
-    //});
-
+    // Add wind direction to the appropriate field
     $('#stationform').submit(function() {
         $.post('/get_wind_dir?station=' + station.value, function(data) {
-            if (data == true) {
-                document.getElementById("w-direction").innerHTML = data[0];
-
-            } else if (data == false) {
-                "TODO";
-            }
+            var wind_dir = document.getElementById("w-direction");;
+            wind_dir.innerHTML = data[0].padStart(3, '0');
         });
     });
 
+    // Add wind direction to the appropriate field
     $('#stationform').submit(function() {
         $.post('/get_wind_str?station=' + station.value, function(data) {
-            if (data == true) {
-                document.getElementById("w-strength").innerHTML = data;
-                console.log(data);
-            } else if (data == false) {
-                "TODO";
-            }
+            var wind_str = document.getElementById("w-strength");
+            wind_str.innerHTML = (data[0]);
+            // wind_str.innerHTML = (data[0] + ' kt'); <-- If I want to add kt at the end.
+            //                                             But what if user manually change winds?
         });
     });
 
     // Add wx_time to wx_dir_str div
     $('#stationform').submit(function() {
         $.post('/get_wx_times?station=' + station.value, function(data) {
-            var wx_time = document.getElementById("wx_time")
-            console.log(data);
+            var wx_time = document.getElementById("wx_time");
             wx_time.innerHTML = data[0];
             document.getElementById("time_dir_str").classList.add("seen");
-            document.getElementById("time_dir_str").classList.remove("hidden")
+            document.getElementById("time_dir_str").classList.remove("hidden");
             document.getElementById("table-header").classList.add("seen");
-            document.getElementById("table-header").classList.remove("hidden")
+            document.getElementById("table-header").classList.remove("hidden");
         });
     });
 
     // Add wx_type to wx_dir_str div
     $('#stationform').submit(function() {
         $.post('/get_wx_types?station=' + station.value, function(data) {
-            var wx_type = document.getElementById("wx_type")
-            console.log(data);
+            var wx_type = document.getElementById("wx_type");
             wx_type.innerHTML = data[0];
             wxtypeandtime.classList.add("seen");
             wxtypeandtime.classList.remove("hidden");
@@ -163,14 +145,14 @@
         });
     });
 
+
+    // Add runways to HTML pages once a station is entered
     $('#stationform').submit(function() {
         $.post('/get_rwy_list?station=' + station.value, function(data) {
-            $("#rwy_table").empty()
+            $("#rwy_table").empty();
             var rwy_list = data;
-
             $.each(rwy_list,function(key,value){
                 $.each(value, function(key2, value2) {
-                    console.log(value)
                     $("#rwy_table").append(
                     "<tr>" +
                     "<td class='fix-broken-table1'>" + value2 + "</td>" +
@@ -183,14 +165,14 @@
     });
 
 
-    // Async call for metar, taf, name, and ident
+    // Async call for metar, taf, airport name, and ident
     $('#stationform').submit(function() {
         $.post('/?station=' + station.value, function(data) {
             document.getElementById("airportname").innerHTML = (data[2] + " - " + data[3]);
             document.getElementById("metar").innerHTML = data[0];
 
             var taf = data[1];
-            $("#taf").empty()
+            $("#taf").empty();
             taf.forEach(function(item){
                 $("#taf").append("<li>" + item + "</li>");
 

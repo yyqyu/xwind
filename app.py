@@ -58,9 +58,7 @@ def index():
 @app.route("/get_rwy_list", methods=["POST"])
 def rwy_list():
     ident = get_ident(request.args.get("station"))
-
     rwy_list = runways(ident)
-
     return jsonify(rwy_list)
 
 
@@ -68,9 +66,7 @@ def rwy_list():
 @app.route("/get_wind_dir", methods=["POST"])
 def get_wind_dir():
     ident = get_ident(request.args.get("station"))
-
     wind_dir = wind_direction(ident)
-
     return jsonify(wind_dir)
 
 
@@ -78,9 +74,7 @@ def get_wind_dir():
 @app.route("/get_wind_str", methods=["POST"])
 def get_wind_str():
     ident = get_ident(request.args.get("station"))
-
     wind_str = wind_strength(ident)
-
     return jsonify(wind_str)
 
 
@@ -88,9 +82,7 @@ def get_wind_str():
 @app.route("/get_wx_times", methods=["POST"])
 def get_wx_times():
     ident = get_ident(request.args.get("station"))
-
     wx_times = weather_times(ident)
-
     return jsonify(wx_times)
 
 
@@ -98,9 +90,7 @@ def get_wx_times():
 @app.route("/get_wx_types", methods=["POST"])
 def get_wx_types():
     ident = get_ident(request.args.get("station"))
-
     wx_types = weather_types(ident)
-
     return jsonify(wx_types)
 
 

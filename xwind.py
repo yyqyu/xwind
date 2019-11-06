@@ -80,9 +80,9 @@ def last_metar_raw(ident):
         "datasource=metars"                     # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
-        "&mostRecent=true"                       # use if only want latest
-        "&hoursBeforeNow=2"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        "&mostRecent=true"                      # use if only want latest
+        "&hoursBeforeNow=2"                     # required even if latest
+        f"&stationString={ident}")              # station ICAO code
 
     root = ET.fromstring(url_response.read())
 
@@ -101,12 +101,12 @@ def last_metar_raw(ident):
 def last_taf_raw(ident):
     url_response = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
+        "datasource=tafs"                       # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
-        "&hoursBeforeNow=12"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        "&hoursBeforeNow=12"                    # required even if latest
+        f"&stationString={ident}")              # station ICAO code
 
     root = ET.fromstring(url_response.read())
 
@@ -165,7 +165,7 @@ def wind_direction(ident):
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_metar = ET.fromstring(url_response_metar.read())
 
@@ -176,12 +176,12 @@ def wind_direction(ident):
 
     url_response_taf = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
+        "datasource=tafs"                       # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_taf = ET.fromstring(url_response_taf.read())
 
@@ -207,7 +207,7 @@ def wind_strength(ident):
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_metar = ET.fromstring(url_response_metar.read())
 
@@ -218,12 +218,12 @@ def wind_strength(ident):
 
     url_response_taf = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
+        "datasource=tafs"                       # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_taf = ET.fromstring(url_response_taf.read())
 
@@ -249,7 +249,7 @@ def weather_times(ident):
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_metar = ET.fromstring(url_response_metar.read())
 
@@ -262,12 +262,12 @@ def weather_times(ident):
 
     url_response_taf = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
+        "datasource=tafs"                       # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_taf = ET.fromstring(url_response_taf.read())
 
@@ -296,7 +296,7 @@ def weather_types(ident):
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_metar = ET.fromstring(url_response_metar.read())
 
@@ -307,12 +307,12 @@ def weather_types(ident):
 
     url_response_taf = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
+        "datasource=tafs"                       # 'metars' or 'tafs'
         "&requestType=retrieve"                 # -- don't touch --
         "&format=xml"                           # -- don't touch --
         "&mostRecent=true"                      # use if only want latest
         "&hoursBeforeNow=1.25"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
+        f"&stationString={ident}")              # station ICAO code
 
     root_taf = ET.fromstring(url_response_taf.read())
 
@@ -340,60 +340,16 @@ def weather_types(ident):
     return wx_type
 
 
-''' TODO
-def weather_time(ident):
-    url_response = urllib.request.urlopen(
-        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
-        "datasource=tafs"                     # 'metars' or 'tafs'
-        "&requestType=retrieve"                 # -- don't touch --
-        "&format=xml"                           # -- don't touch --
-        "&mostRecent=true"                      # use if only want latest
-        "&hoursBeforeNow=12"                  # required even if latest
-        f"&stationString={ident}")            # station ICAO code
-
-    root = ET.fromstring(url_response.read())json
-
-    if not (root.find('data/TAF')):
-        raw_text = " "
-    else:
-        raw_text = root.find('data/TAF/raw_text').text
-
-    return raw_text '''
-
-
 def runways(ident):
     runway_list = []
     rwys = db.execute(
-        "SELECT DISTINCT runways.le_ident, runways.he_ident "
+        "SELECT DISTINCT runways.le_ident, runways.xhe_ident "
         "FROM runways, airports "
         "WHERE runways.airport_ident=:ident "
         "ORDER BY length_ft DESC", ident=ident)
     for r in rwys:
         runway_list.append(r)
     return runway_list
-
-
-'''def lookup(symbol):
-    """Look up quote for symbol."""
-    # Contact API
-    try:
-        api_key = 'pk_9a4852b6b0404c58b4642145bf88b6c2'
-        response = requests.get(
-            f"https://cloud-sse.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}")
-        response.raise_for_status()
-    except requests.RequestException:
-        return None
-
-    # Parse response
-    try:
-        quote = response.json()
-        return {
-            "name": quote["companyName"],
-            "price": float(quote["latestPrice"]),
-            "symbol": quote["symbol"]
-        }
-    except (KeyError, TypeError, ValueError):
-        return None'''
 
 
 '''def escape(s):
