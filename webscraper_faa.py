@@ -45,7 +45,7 @@ def main():
     to_write = jsbeautifier.beautify(response.text)
 
     # Write all notams into a file in JSON format
-    filename = ("response_{airport}.js")
+    filename = (f"./test_scraper/response_{airport}.js")
     with open(filename, "w") as file:
         file.write(to_write)
 
