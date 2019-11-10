@@ -353,8 +353,8 @@ def weather_types(ident):
 def runways(ident):
     runway_list = []
     rwys = db.execute(
-        "SELECT DISTINCT runways.le_ident, runways.xhe_ident "
-        "FROM runways, airports "
+        "SELECT runways.le_ident, runways.xhe_ident "
+        "FROM runways "
         "WHERE runways.airport_ident=:ident "
         "ORDER BY length_ft DESC", ident=ident)
     for r in rwys:
@@ -365,8 +365,8 @@ def runways(ident):
 def headings(ident):
     headings_list = []
     headings = db.execute(
-        "SELECT DISTINCT runways.le_heading_degT, runways.xhe_heading_degT "
-        "FROM runways, airports "
+        "SELECT runways.le_heading_degT, runways.xhe_heading_degT "
+        "FROM runways "
         "WHERE runways.airport_ident=:ident "
         "ORDER BY length_ft DESC", ident=ident)
     for head in headings:

@@ -21,7 +21,7 @@
 
 <div class="row">
 
-        <div class="mt-4 col-12 d-flex justify-content-center remove" id="loading">
+        <div class="mt-6 col-12 d-flex justify-content-center remove" id="loading">
                 <div class="spinner-grow text-primary" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -109,7 +109,7 @@
         }
     });
 
-    // Async call for all data
+    // Async call for all result
     $('#stationform').submit(function() {
         document.getElementById("loading").classList.add("seen")
         document.getElementById("loading").classList.remove("remove")
@@ -129,18 +129,18 @@
         $("w-direction").empty();
         $("w-strength").empty();
         $("#airportname").empty();
-        $.post('/?station=' + station.value, function(data) {
-            console.log(data);
-            document.getElementById("airportname").innerHTML = (data[2] + " - " + data[3]);
-            document.getElementById("metar").innerHTML = data[0];
+        $.post('/?station=' + station.value, function(result) {
+            console.log(result);
+            document.getElementById("airportname").innerHTML = (result[2] + " - " + result[3]);
+            document.getElementById("metar").innerHTML = result[0];
 
-            var taf = data[1];
+            var taf = result[1];
             taf.forEach(function(item){
                 $("#taf").append("<li>" + item + "</li>");
             });
 
             // Add runways to HTML pages once a station is entered
-            var rwy_list = data[4];
+            var rwy_list = result[4];
             $.each(rwy_list,function(key,value){
                 $.each(value, function(key2, value2) {
                     $("#rwy_table").append(
@@ -155,40 +155,40 @@
             // Add wind direction to the appropriate field
             var wind_dir = document.getElementById("w-direction");;
             var counter = 0;
-            wind_dir.innerHTML = data[6][counter].padStart(3, '0');
+            wind_dir.innerHTML = result[6][counter].padStart(3, '0');
             $('#next').click(function() {
-                if (counter < (data[6].length - 1)) {
+                if (counter < (result[6].length - 1)) {
                 counter++
                 $('#w-direction').empty();
-                $('#w-direction').html(data[6][counter].padStart(3, '0'));
+                $('#w-direction').html(result[6][counter].padStart(3, '0'));
                 }
             })
             $('#previous').click(function() {
                 if(counter>0){
                 counter--
                 $('#w-direction').empty();
-                $('#w-direction').html(data[6][counter].padStart(3, '0'));
+                $('#w-direction').html(result[6][counter].padStart(3, '0'));
                 }
             })
 
             // Add wind strength to the appropriate field
             var wind_str = document.getElementById("w-strength");
-            /* wind_str.innerHTML = (data[0] + ' kt'); <-- If I want to add kt at the end.
+            /* wind_str.innerHTML = (result[0] + ' kt'); <-- If I want to add kt at the end.
                                                            (But what if user manually change winds?)*/
             var counter2 = 0;
-            wind_str.innerHTML = data[7][counter2];
+            wind_str.innerHTML = result[7][counter2];
             $('#next').click(function() {
-                if (counter2 < (data[7].length - 1)) {
+                if (counter2 < (result[7].length - 1)) {
                 counter2++
                 $('#w-strength').empty();
-                $('#w-strength').html(data[7][counter2]);
+                $('#w-strength').html(result[7][counter2]);
                 }
             })
             $('#previous').click(function() {
                 if(counter2>0){
                 counter2--
                 $('#w-strength').empty();
-                $('#w-strength').html(data[7][counter2]);
+                $('#w-strength').html(result[7][counter2]);
                 }
             })
 
@@ -203,19 +203,19 @@
             document.getElementById("next").classList.add("seen");
             document.getElementById("next").classList.remove("hidden");
             var counter4 = 0;
-            wx_time.innerHTML = data[8][counter4];
+            wx_time.innerHTML = result[8][counter4];
             $('#next').click(function() {
-                if (counter4 < (data[8].length - 1)) {
+                if (counter4 < (result[8].length - 1)) {
                 counter4++
                 $('#wx_time').empty()
-                $('#wx_time').html(data[8][counter4]);
+                $('#wx_time').html(result[8][counter4]);
                 }
             })
             $('#previous').click(function() {
                 if(counter4>0){
                 counter4--
                 $('#wx_time').empty()
-                $('#wx_time').html(data[8][counter4]);
+                $('#wx_time').html(result[8][counter4]);
                 }
             })
 
@@ -224,26 +224,26 @@
             wxtypeandtime.classList.add("seen");
             wxtypeandtime.classList.remove("hidden");
             var counter3 = 0;
-            wx_type.innerHTML = data[9][counter3];
+            wx_type.innerHTML = result[9][counter3];
             $('#next').click(function() {
-                if (counter3 < (data[9].length - 1)) {
+                if (counter3 < (result[9].length - 1)) {
                 counter3++
                 $('#wx_type').empty()
-                $('#wx_type').html(data[9][counter3]);
+                $('#wx_type').html(result[9][counter3]);
                 }
             })
             $('#previous').click(function() {
                 if(counter3>0){
                 counter3--
                 $('#wx_type').empty()
-                $('#wx_type').html(data[9][counter3]);
+                $('#wx_type').html(result[9][counter3]);
                 }
             })
 
             // Async call to get a list of heading in SAME ORDER as runway_list
-            console.log(data[5])
+            console.log(result[5])
             var headings_list = [];
-            $.each(data[5], function(key, value){
+            $.each(result[5], function(key, value){
                 $.each(value, function(key2, value2) {
                     headings_list.push(value2)
                 })
@@ -253,6 +253,7 @@
 
             document.getElementById("loading").classList.add("remove")
             document.getElementById("loading").classList.remove("seen")
+            
         });
         
     });
