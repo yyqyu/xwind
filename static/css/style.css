@@ -66,6 +66,11 @@ a.white-hover:active {
     visibility: hidden;
 }
 
+.remove {
+    display:none !important;
+    visibility: collapse;
+}
+
 .seen {
     visibility: visible;
 }
@@ -79,4 +84,10 @@ a.white-hover:active {
     margin-left:5vw;
     max-width: 80vw;
   }
+}
+
+.spinner-grow {
+    display: inline-flex;
+    width: 10rem;
+    height: 10rem;
 }

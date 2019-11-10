@@ -10,3 +10,10 @@ SQL DATABASE:
 2 = small airport
 3 = medium airport
 4 = large airport
+
+
+
+document.getElementById("time_dir_str").classList.remove("hidden");
+document.getElementById("table-header").classList.remove("hidden");
+document.getElementById("previous").classList.remove("hidden");
+document.getElementById("next").classList.remove("hidden");

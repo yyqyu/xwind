@@ -2,7 +2,7 @@
 import json
 
 from cs50 import SQL
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
 from tempfile import mkdtemp
 # from werkzeug.exceptions import (default_exceptions, HTTPException,
@@ -15,6 +15,9 @@ from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
 
 # Configure application
 app = Flask(__name__)
+SESSION_TYPE = 'redis'
+app.config.from_object(__name__)
+Session(app)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -39,67 +42,24 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///database/xwind.db")
 
-
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'POST':
-        ident = get_ident(request.form.get("station"))
 
+    if request.method == 'POST':
+        
+        ident = get_ident(request.form.get("station"))
         metar_text = last_metar_raw(ident)
         taf_text = format_taf(last_taf_raw(ident))
         airport_name = get_name(ident)
-
-        return jsonify(metar_text, taf_text, airport_name, ident)
+        rwy_list = runways(ident)
+        heading_list = headings(ident)
+        wind_dir = wind_direction(ident)
+        wind_str = wind_strength(ident)
+        wx_times = weather_times(ident)
+        wx_types = weather_types(ident)
+        return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types)
     else:
         return render_template("index.html")
-
-
-# Check DB for runway list
-@app.route("/get_rwy_list", methods=["POST"])
-def rwy_list():
-    ident = get_ident(request.args.get("station"))
-    rwy_list = runways(ident)
-    return jsonify(rwy_list)
-
-
-# Check DB for headings list
-@app.route("/get_headings_list", methods=["POST"])
-def headings_list():
-    ident = get_ident(request.args.get("station"))
-    heading_list = headings(ident)
-    return jsonify(heading_list)
-
-
-# Ajax functions to return wind directions
-@app.route("/get_wind_dir", methods=["POST"])
-def get_wind_dir():
-    ident = get_ident(request.args.get("station"))
-    wind_dir = wind_direction(ident)
-    return jsonify(wind_dir)
-
-
-# Ajax functions to return wind strength
-@app.route("/get_wind_str", methods=["POST"])
-def get_wind_str():
-    ident = get_ident(request.args.get("station"))
-    wind_str = wind_strength(ident)
-    return jsonify(wind_str)
-
-
-# Ajax functions to return weather wind time
-@app.route("/get_wx_times", methods=["POST"])
-def get_wx_times():
-    ident = get_ident(request.args.get("station"))
-    wx_times = weather_times(ident)
-    return jsonify(wx_times)
-
-
-# Ajax functions to return weather wind time
-@app.route("/get_wx_types", methods=["POST"])
-def get_wx_types():
-    ident = get_ident(request.args.get("station"))
-    wx_types = weather_types(ident)
-    return jsonify(wx_types)
 
 
 ''' def errorhandler(e):

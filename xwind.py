@@ -13,7 +13,6 @@ from itertools import islice
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///database/xwind.db")
 
-
 # Get ident code
 def get_ident(station):
     if not request.form.get("station"):
@@ -89,9 +88,14 @@ def last_metar_raw(ident):
     if not (root.findall('data/METAR')):
         raw_text = "No weather available"
     else:
-        if (root.find('data/METAR/metar_type').text) == "METAR":
+        if root.find('data/METAR/station_id').text[:1] == "K":
+            if root.find('data/METAR/metar_type').text == "METAR":
+                raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
+            elif root.find('data/METAR/metar_type').text == "SPECI":
+                raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
+        elif root.find('data/METAR/raw_text').text[9:][:2] == "00":
             raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
-        elif(root.find('data/METAR/metar_type').text) == "SPECI":
+        else:
             raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
 
     return raw_text
@@ -300,10 +304,16 @@ def weather_types(ident):
 
     root_metar = ET.fromstring(url_response_metar.read())
 
+    print(root_metar.find('data/METAR/station_id').text[:1])
+
     if not (root_metar.findall('data/METAR')):
         wx_type.append(" ")
-    else:
+    elif root_metar.find('data/METAR/station_id').text[:1] == "K":
         wx_type.append(root_metar.find('data/METAR/metar_type').text)
+    elif root_metar.find('data/METAR/raw_text').text[9:][:2] == "00":
+        wx_type.append("METAR")
+    else:
+        wx_type.append("SPECI")
 
     url_response_taf = urllib.request.urlopen(
         "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
