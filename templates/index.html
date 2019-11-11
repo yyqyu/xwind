@@ -111,8 +111,8 @@
 
     // Async call for all result
     $('#stationform').submit(function() {
-        document.getElementById("loading").classList.add("seen")
-        document.getElementById("loading").classList.remove("remove")
+        document.getElementById("loading").classList.add("seen");
+        document.getElementById("loading").classList.remove("remove");
         document.getElementById("time_dir_str").classList.add("hidden");
         document.getElementById("time_dir_str").classList.remove("seen");
         document.getElementById("table-header").classList.add("hidden");
@@ -153,23 +153,23 @@
             });
 
             // Add wind direction to the appropriate field
-            var wind_dir = document.getElementById("w-direction");;
+            var wind_dir = document.getElementById("w-direction");
             var counter = 0;
             wind_dir.innerHTML = result[6][counter].padStart(3, '0');
             $('#next').click(function() {
                 if (counter < (result[6].length - 1)) {
-                counter++
+                counter++;
                 $('#w-direction').empty();
                 $('#w-direction').html(result[6][counter].padStart(3, '0'));
                 }
-            })
+            });
             $('#previous').click(function() {
                 if(counter>0){
-                counter--
+                counter--;
                 $('#w-direction').empty();
                 $('#w-direction').html(result[6][counter].padStart(3, '0'));
                 }
-            })
+            });
 
             // Add wind strength to the appropriate field
             var wind_str = document.getElementById("w-strength");
@@ -179,18 +179,18 @@
             wind_str.innerHTML = result[7][counter2];
             $('#next').click(function() {
                 if (counter2 < (result[7].length - 1)) {
-                counter2++
+                counter2++;
                 $('#w-strength').empty();
                 $('#w-strength').html(result[7][counter2]);
                 }
-            })
+            });
             $('#previous').click(function() {
                 if(counter2>0){
-                counter2--
+                counter2--;
                 $('#w-strength').empty();
                 $('#w-strength').html(result[7][counter2]);
                 }
-            })
+            });
 
             // Add wx_time to wx_dir_str div
             var wx_time = document.getElementById("wx_time");
@@ -206,18 +206,18 @@
             wx_time.innerHTML = result[8][counter4];
             $('#next').click(function() {
                 if (counter4 < (result[8].length - 1)) {
-                counter4++
-                $('#wx_time').empty()
+                counter4++;
+                $('#wx_time').empty();
                 $('#wx_time').html(result[8][counter4]);
                 }
-            })
+            });
             $('#previous').click(function() {
                 if(counter4>0){
-                counter4--
-                $('#wx_time').empty()
+                counter4--;
+                $('#wx_time').empty();
                 $('#wx_time').html(result[8][counter4]);
                 }
-            })
+            });
 
             // Add wx_type to wx_dir_str div
             var wx_type = document.getElementById("wx_type");
@@ -227,37 +227,37 @@
             wx_type.innerHTML = result[9][counter3];
             $('#next').click(function() {
                 if (counter3 < (result[9].length - 1)) {
-                counter3++
-                $('#wx_type').empty()
+                counter3++;
+                $('#wx_type').empty();
                 $('#wx_type').html(result[9][counter3]);
                 }
-            })
+            });
             $('#previous').click(function() {
                 if(counter3>0){
-                counter3--
-                $('#wx_type').empty()
+                counter3--;
+                $('#wx_type').empty();
                 $('#wx_type').html(result[9][counter3]);
                 }
-            })
+            });
 
             // Async call to get a list of heading in SAME ORDER as runway_list
-            console.log(result[5])
+            console.log(result[5]);
             var headings_list = [];
             $.each(result[5], function(key, value){
                 $.each(value, function(key2, value2) {
-                    headings_list.push(value2)
-                })
-            })
-            console.log(headings_list)
+                    headings_list.push(value2);
+                });
+            });
+            console.log(headings_list);
 
 
-            document.getElementById("loading").classList.add("remove")
-            document.getElementById("loading").classList.remove("seen")
-            
+            document.getElementById("loading").classList.add("remove");
+            document.getElementById("loading").classList.remove("seen");
+
         });
-        
+
     });
 
- 
+
 </script>
 {% endblock %}
