@@ -304,8 +304,6 @@ def weather_types(ident):
 
     root_metar = ET.fromstring(url_response_metar.read())
 
-    print(root_metar.find('data/METAR/station_id').text[:1])
-
     if not (root_metar.findall('data/METAR')):
         wx_type.append(" ")
     elif root_metar.find('data/METAR/station_id').text[:1] == "K":
@@ -356,6 +354,7 @@ def runways(ident):
         "SELECT runways.le_ident, runways.xhe_ident "
         "FROM runways "
         "WHERE runways.airport_ident=:ident "
+        "COLLATE NOCASE "
         "ORDER BY length_ft DESC", ident=ident)
     for r in rwys:
         runway_list.append(r)
@@ -368,6 +367,7 @@ def headings(ident):
         "SELECT runways.le_heading_degT, runways.xhe_heading_degT "
         "FROM runways "
         "WHERE runways.airport_ident=:ident "
+        "COLLATE NOCASE "
         "ORDER BY length_ft DESC", ident=ident)
     for head in headings:
         headings_list.append(head)
