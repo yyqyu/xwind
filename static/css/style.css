@@ -92,3 +92,10 @@ a.white-hover:active {
     height: 10rem;
     margin-top: 10rem;
 }
+
+mark {
+    background-color: #2e67b1;
+    color: white;
+    padding: 0.11em 0.25em;
+
+}
