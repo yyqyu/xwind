@@ -108,12 +108,14 @@
             return false;
         }
     });
-    data = [];
-    // Async call for all data
 
+    var data = [];
+    // Async call for all data
     $('#stationform').on("submit", function() {
+        // Add loading animation
         document.getElementById("loading").classList.add("seen");
         document.getElementById("loading").classList.remove("remove");
+        // Hide divs where ajax data will be posted
         document.getElementById("time_dir_str").classList.add("hidden");
         document.getElementById("time_dir_str").classList.remove("seen");
         document.getElementById("table-header").classList.add("hidden");
@@ -130,6 +132,7 @@
         $("w-direction").empty();
         $("w-strength").empty();
         $("#airportname").empty();
+        // Set variables back to zero
         data.length = 0;
         let counter1 = 0;
         let counter2 = 0;
@@ -147,9 +150,8 @@
 
         });
 
+        // Put data received from ajax call onto HTML page
         function iterate(data){
-
-            //console.log(data);
 
             document.getElementById("airportname").innerHTML = (data[0][2] + " - " + data[0][3]);
             document.getElementById("metar").innerHTML = data[0][0];
@@ -178,7 +180,6 @@
             $('#next').click(function() {
                 if (counter1 < (data[0][6].length - 1)) {
                 counter1++;
-                //console.log(counter1);
                 $('#w-direction').empty();
                 $('#w-direction').html(data[0][6][counter1].padStart(3, '0'));
                 }
@@ -186,7 +187,6 @@
             $('#previous').click(function() {
                 if(counter1>0){
                 counter1--;
-                //console.log(counter1);
                 $('#w-direction').empty();
                 $('#w-direction').html(data[0][6][counter1].padStart(3, '0'));
                 }
@@ -200,7 +200,6 @@
             $('#next').click(function() {
                 if (counter2 < (data[0][7].length - 1)) {
                 counter2++;
-                //console.log(counter2);
                 $('#w-strength').empty();
                 $('#w-strength').html(data[0][7][counter2]);
                 }
@@ -208,7 +207,6 @@
             $('#previous').click(function() {
                 if(counter2>0){
                 counter2--;
-                //console.log(counter2);
                 $('#w-strength').empty();
                 $('#w-strength').html(data[0][7][counter2]);
                 }
@@ -228,7 +226,6 @@
             $('#next').click(function() {
                 if (counter3 < (data[0][8].length - 1)) {
                 counter3++;
-                //console.log(counter3);
                 $('#wx_time').empty();
                 $('#wx_time').html(data[0][8][counter3]);
                 }
@@ -236,7 +233,6 @@
             $('#previous').click(function() {
                 if(counter3>0){
                 counter3--;
-                //console.log(counter3);
                 $('#wx_time').empty();
                 $('#wx_time').html(data[0][8][counter3]);
                 }
@@ -250,7 +246,6 @@
             $('#next').click(function() {
                 if (counter4 < (data[0][9].length - 1)) {
                 counter4++;
-                //console.log(counter4);
                 $('#wx_type').empty();
                 $('#wx_type').html(data[0][9][counter4]);
                 }
@@ -258,21 +253,19 @@
             $('#previous').click(function() {
                 if(counter4>0){
                 counter4--;
-                //console.log(counter4);
                 $('#wx_type').empty();
                 $('#wx_type').html(data[0][9][counter4]);
                 }
             });
 
-            // Async request to get a list of heading in SAME ORDER as runway_list
-            // console.log(data[0][5]);
+            // Get a list of headings in SAME ORDER as runway_list
             let headings_list = [];
             $.each(data[0][5], function(key, value){
                 $.each(value, function(key2, value2) {
                     headings_list.push(value2);
                 });
             });
-            // console.log(headings_list);
+
 
 
             document.getElementById("loading").classList.add("remove");
@@ -284,49 +277,44 @@
 
     // Wait for page to finish loading
     window.addEventListener('load', function() {
+        /* Watch #w-direction div for change 
+        (will trigger even if winds don't change since winds will still be removed and added by iterate function)*/
         var element = document.querySelector('#w-direction');
 
+        // Define variables to work with in highlight function
         let search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
         let search_term_pt2 = document.querySelector("#w-strength").textContent.padStart(2, '0');
         let search_term = (search_term_pt1 + search_term_pt2 + "KT");
         let results = document.querySelector("#wx");
-        let old_results = document.querySelector("#wx");
 
         // Add mutation observer (multiple browser support)
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-
+        // Call highlight function if 
         var observer = new MutationObserver(highlight);
         observer.observe(element, {
     	  childList: true
         });
 
         function highlight() {
+            // Update results, search_term_pt1 and search_term_pt2 when function is ran
             results.innerHTML = document.querySelector("#wx").innerHTML;
             search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
-
+            
+            // Replace value of 000 by VRB in the search substring
             if (search_term_pt1 == "000") {
               search_term_pt1 = "VRB";
             }
 
             search_term_pt2 = document.querySelector("#w-strength").textContent.padStart(2, '0');
             search_term = (search_term_pt1 + search_term_pt2 + "KT");
-            mark1 = "<mark>";
-            mark2 = "</mark>";
+            // Remove previous highlight tags in HTML
             results.innerHTML = results.innerHTML.replace(/<mark>/g,'');
             results.innerHTML = results.innerHTML.replace(/<\/mark>/g,'');
+            // Highlight winds if found.
             results.innerHTML = results.innerHTML.replace(new RegExp(search_term, "gi"), (match) => `<mark>${match}</mark>`);
+            // Check for gust and highlight winds containing them
             search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
             results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
-            // Need to check if it actually highlighed anything so lets check for <mark>
-            /*var highlighted = results.innerHTML.search("<mark>") >= 0;
-            console.log(highlighted);
-            if (!highlighted) {
-                search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
-                results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
-                console.log(new RegExp(search_gust_string));
-            }*/
-
-            console.log(results.innerHTML);
       }
 
     });
