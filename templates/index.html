@@ -315,14 +315,16 @@
             results.innerHTML = results.innerHTML.replace(/<mark>/g,'');
             results.innerHTML = results.innerHTML.replace(/<\/mark>/g,'');
             results.innerHTML = results.innerHTML.replace(new RegExp(search_term, "gi"), (match) => `<mark>${match}</mark>`);
+            search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
+            results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
             // Need to check if it actually highlighed anything so lets check for <mark>
-            var highlighted = results.innerHTML.search("<mark>") >= 0;
+            /*var highlighted = results.innerHTML.search("<mark>") >= 0;
             console.log(highlighted);
             if (!highlighted) {
                 search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
                 results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
                 console.log(new RegExp(search_gust_string));
-            }
+            }*/
 
             console.log(results.innerHTML);
       }
