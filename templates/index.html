@@ -70,7 +70,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col-12 col-md-4 mt-4 fira h6 formatting" id="wx">
+    <div class="col-12 col-md-4 mt-4 fira-font h6 formatting" id="wx">
         <p class = "formatting" id="metar"></p><br>
         <ul class = "formatting" id="taf"></ul>
     </div>
@@ -92,7 +92,6 @@
       }
     }
 
-
     // Prevent inputting more than 3 characters in table
     $('#w-direction').on("keypress", function (e) {
         if (this.innerHTML.length >= 3) {
@@ -110,7 +109,7 @@
     });
 
     var data = [];
-    // Async call for all data
+    // Async call for all data on form submit
     $('#stationform').on("submit", function() {
         // Add loading animation
         document.getElementById("loading").classList.add("seen");
@@ -138,6 +137,7 @@
         let counter2 = 0;
         let counter3 = 0;
         let counter4 = 0;
+        let counter5 = 0;
         $.ajax({
                 type: "POST",
                 url: '/?station=' + station.value,
@@ -163,16 +163,16 @@
 
             // Add runways to HTML pages once a station is entered
             let rwy_list = data[0][4];
+            let row_id = 0;
             $.each(rwy_list,function(key,value){
                 $.each(value, function(key2, value2) {
                     $("#rwy_table").append(
-                    "<tr>" +
-                    "<td class='fix-broken-table1'>" + value2 + "</td>" +
-                    "<td class='fix-broken-table2'id='headtailwind'></td>" +
-                    "<td class='fix-broken-table2'id='crosswind'></td>" +
-                    "<td class='fix-broken-table2'id='CRFI'></td>");
+                    "<tr id=row_id_" + row_id + ">" +
+                    "<td class='fix-broken-table1'>" + value2 + "</td>");
+                    row_id++;
                 });
             });
+
 
             // Add wind direction to the appropriate field
             let wind_dir = document.getElementById("w-direction");
@@ -265,8 +265,42 @@
                     headings_list.push(value2);
                 });
             });
-
-
+            
+            // RWY HEADINGS
+            calculate(data);
+            function calculate(data) {
+                let rwy_headings = data[0][5];
+                var num = 0;
+                let id = "row_id_" + num;
+                let wind_speed = 0;
+                let wind = 0;
+                let crosswind = 0;
+                let headwind = 0;
+                let to_rad = (Math.PI / 180);
+                $.each(rwy_headings,function(key_h,value_h){
+                    $.each(value_h, function(key_h_2, value_h_2) {
+                        wind = parseInt(document.querySelector("#w-direction").innerHTML);
+                        wind_speed = parseInt(document.querySelector("#w-strength").innerHTML);
+                        crosswind = Math.abs(wind_speed * Math.sin((value_h_2 - wind)* to_rad));
+                        headwind = (wind_speed * Math.cos((value_h_2 - wind)* to_rad));
+                        console.log(id);
+                        $("#" + id).children(".fix-broken-table3").remove();
+                        $("#" + id).append(
+                        "<td class='fix-broken-table3'id='headtailwind'>"+ Math.round(headwind*10)/10 +"</td>" +
+                        "<td class='fix-broken-table3'id='crosswind'>"+ Math.round(crosswind*10)/10 + "</td>" +
+                        "<td class='fix-broken-table3'id='CRFI'></td>");
+                        num++;
+                        id = "row_id_" + num;
+                    });
+                });
+            }
+            
+            $('#next').click(function() {
+                calculate(data);
+            });
+            $('#previous').click(function() {
+                calculate(data);
+            });
 
             document.getElementById("loading").classList.add("remove");
             document.getElementById("loading").classList.remove("seen");

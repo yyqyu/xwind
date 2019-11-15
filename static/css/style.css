@@ -1,8 +1,16 @@
-.asap {
+@media only screen and (max-width: 600px) {
+    #wx {
+      margin-left:5vw;
+      max-width: 80vw;
+    }
+  }
+  
+
+.asap-font {
     font-family: 'Asap', sans-serif;
 }
 
-.fira {
+.fira-font {
     font-family: 'Fira Code', sans-serif;
     font-size: 85%;
 }
@@ -41,6 +49,12 @@ a.white-hover:active {
     text-align: center;
 }
 
+.fix-broken-table3 {
+    width: 22%;
+    text-align: center;
+}
+
+
 .table-explan {
     font-size: small;
 }
@@ -77,13 +91,6 @@ a.white-hover:active {
 
 .table-header {
     border-collapse: collapse;
-}
-
-@media only screen and (max-width: 600px) {
-  #wx {
-    margin-left:5vw;
-    max-width: 80vw;
-  }
 }
 
 .spinner-grow {

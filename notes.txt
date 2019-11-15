@@ -17,3 +17,18 @@ document.getElementById("time_dir_str").classList.remove("hidden");
 document.getElementById("table-header").classList.remove("hidden");
 document.getElementById("previous").classList.remove("hidden");
 document.getElementById("next").classList.remove("hidden");
+
+
+
+
+
+Calculating crosswind and headwind
+
+Function needs to be called with ajax call to pass the data thru.. 
+
+Should it be in iterate function?
+
+Or I could simply put the data into an invisible div somewhere with iterate, 
+(like I'm doing for all other visible divs)
+then do the calculations on an another function on "any change" as I'm doing with highlighting.. 
+I can still access the data even if invisible, and I redo the calculations on any change on any given div change (probably wxtypeandtime)
