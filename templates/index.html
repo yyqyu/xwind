@@ -35,8 +35,8 @@
             <thead>
                 <tr>
                     <th class = "fix-broken-table1 hidden" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
-                    <th class = "fix-broken-table2 tbcontentedit" contenteditable="true" type="number" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
-                    <th class = "fix-broken-table2 tbcontentedit" contenteditable="true" type="number" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
+                    <th class = "fix-broken-table2 tbcontentedit" data-ph="Wind direction" contenteditable="true" type="number" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
+                    <th class = "fix-broken-table2 tbcontentedit" data-ph="Wind speed" contenteditable="true" type="number" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
                 </tr>
             </thead>
         </table>
@@ -59,7 +59,7 @@
                     Crosswind
                 </div>
                 <div class="fix-broken-table2 h6 table-explan">
-                    Min CRFI
+                    Min CRFI (crosswind)
                 </div>
 
             </div>
@@ -267,7 +267,6 @@
             });
             
             // RWY HEADINGS
-            calculate(data);
             function calculate(data) {
                 let rwy_headings = data[0][5];
                 var num = 0;
@@ -276,6 +275,7 @@
                 let wind = 0;
                 let crosswind = 0;
                 let headwind = 0;
+                let min_crfi = 0;
                 let to_rad = (Math.PI / 180);
                 $.each(rwy_headings,function(key_h,value_h){
                     $.each(value_h, function(key_h_2, value_h_2) {
@@ -283,37 +283,153 @@
                         wind_speed = parseInt(document.querySelector("#w-strength").innerHTML);
                         crosswind = Math.abs(wind_speed * Math.sin((value_h_2 - wind)* to_rad));
                         headwind = (wind_speed * Math.cos((value_h_2 - wind)* to_rad));
-                        console.log(id);
+                        if (crosswind > 45) {
+                            min_crfi = "Off charts";
+                        }
+                        else {
+                            min_crfi = interpolate(crosswind);
+                            min_crfi = Math.round(min_crfi*100)/100;
+                        }
                         $("#" + id).children(".fix-broken-table3").remove();
                         $("#" + id).append(
-                        "<td class='fix-broken-table3'id='headtailwind'>"+ Math.round(headwind*10)/10 +"</td>" +
-                        "<td class='fix-broken-table3'id='crosswind'>"+ Math.round(crosswind*10)/10 + "</td>" +
-                        "<td class='fix-broken-table3'id='CRFI'></td>");
+                        "<td class='fix-broken-table3 head'>"+ Math.round(headwind*10)/10 +"</td>" +
+                        "<td class='fix-broken-table3 cross'>"+ Math.round(crosswind*10)/10 + "</td>" +
+                        "<td class='fix-broken-table3 CRFI'>"+ min_crfi+ "</td>");
                         num++;
                         id = "row_id_" + num;
                     });
                 });
             }
-            
+
+            // Makes calculations when Next or Previous is clicked
+            calculate(data);
+            background();
             $('#next').click(function() {
                 calculate(data);
+                background();
             });
             $('#previous').click(function() {
                 calculate(data);
+                background();
+            });
+            // Makes calculations when user inputs a new value
+            var contentedited1 = document.querySelector("#w-direction");
+            contentedited1.addEventListener('input', function() {
+                calculate(data);
+                background();
+            });
+            var contentedited2 = document.querySelector("#w-strength");
+            contentedited2.addEventListener('input', function() {
+                calculate(data);
+                background();
             });
 
             document.getElementById("loading").classList.add("remove");
             document.getElementById("loading").classList.remove("seen");
+            
 
-        }
+            function interpolate(crosswind) {
+                if (crosswind <= 10){
+                    let lower_crfi = 0.2;
+                    let higher_crfi = 0.3;
+                    let crfi_gap = higher_crfi - lower_crfi;
+                    let lower_wind = 0;
+                    let higher_wind = 10;
+                    let wind_gap = higher_wind - lower_wind;
+                    let min_crfi =  lower_crfi + ((crosswind - lower_wind) / wind_gap) * crfi_gap ;
+                    return min_crfi;
+                }
+                else if ((crosswind > 10) && (crosswind <= 15)) {
+                    let lower_crfi = 0.3;
+                    let higher_crfi = 0.4;
+                    let crfi_gap = higher_crfi - lower_crfi;
+                    let lower_wind = 10;
+                    let higher_wind = 15;
+                    let wind_gap = higher_wind - lower_wind;
+                    let min_crfi = lower_crfi + ((crosswind - lower_wind) / wind_gap) * crfi_gap;
+                    return min_crfi;
+                }
+                else if ((crosswind > 15) && (crosswind <= 35)) {
+                    let lower_crfi = 0.4;
+                    let higher_crfi = 0.6;
+                    let crfi_gap = higher_crfi - lower_crfi;
+                    let lower_wind = 15;
+                    let higher_wind = 35;
+                    let wind_gap = higher_wind - lower_wind;
+                    let min_crfi = lower_crfi + ((crosswind - lower_wind) / wind_gap) * crfi_gap;
+                    return min_crfi;
+                }
+                else if ((crosswind > 35) && (crosswind <= 40)) {
+                    let lower_crfi = 0.6;
+                    let higher_crfi = 0.7;
+                    let crfi_gap = higher_crfi - lower_crfi;
+                    let lower_wind = 35;
+                    let higher_wind = 40;
+                    let wind_gap = higher_wind - lower_wind;
+                    let min_crfi = lower_crfi + ((crosswind - lower_wind) / wind_gap) * crfi_gap;
+                    return min_crfi;
+                }
+                else if ((crosswind > 40) && (crosswind <= 45)) {
+                    let lower_crfi = 0.7;
+                    let higher_crfi = 0.75;
+                    let crfi_gap = higher_crfi - lower_crfi;
+                    let lower_wind = 40;
+                    let higher_wind = 45;
+                    let wind_gap = higher_wind - lower_wind;
+                    let min_crfi = lower_crfi + ((crosswind - lower_wind) / wind_gap) * crfi_gap;
+                    return min_crfi;
+                }
+            }
 
-    });
+            function background() {
+                headtailwind_divs = document.getElementsByClassName("head");
+                crosswind_divs = document.getElementsByClassName("cross");
+                CRFI_divs = document.getElementsByClassName("CRFI");
+                console.log(headtailwind_divs);
+                for (var i=0; i < headtailwind_divs.length; i++) {
+                    console.log(crosswind_divs[i]);
+                    if ((headtailwind_divs[i].innerHTML < 0) && (headtailwind_divs[i].innerHTML > -10)) {
+                        if (headtailwind_divs[i].classList.contains("tailwind") == false) {
+                            headtailwind_divs[i].classList.add("tailwind");
+                        }
+                    }
+                    else if (headtailwind_divs[i].innerHTML <= -10) {
+                        if (headtailwind_divs[i].classList.contains("tailwind_strong") == false) {
+                            headtailwind_divs[i].classList.add("tailwind_strong");
+                        }
+                    }
+                    /*else if (headtailwind_divs[i].innerHTML >= 0) {
+                        if (headtailwind_divs[i].classList.contains("headwind") == false) {
+                            headtailwind_divs[i].classList.add("headwind");
+                        }
+                    }*/
+                }
+
+                for (var j = 0; j < crosswind_divs.length; j++){
+                    if (crosswind_divs[j].innerHTML >= 20) {
+                        if (crosswind_divs[j].classList.contains("crosswind_strong") == false) {
+                            crosswind_divs[j].classList.add("crosswind_strong")
+                        }
+                    }
+                    else if ((crosswind_divs[j].innerHTML >= 10) && (crosswind_divs[j].innerHTML < 20)) {
+                        if (crosswind_divs[j].classList.contains("crosswind_medium") == false) {
+                            crosswind_divs[j].classList.add("crosswind_medium")
+                        }
+                    }
+                }
+            }
+        }   
+
+    })
 
     // Wait for page to finish loading
     window.addEventListener('load', function() {
+
+
         /* Watch #w-direction div for change 
         (will trigger even if winds don't change since winds will still be removed and added by iterate function)*/
         var element = document.querySelector('#w-direction');
+
 
         // Define variables to work with in highlight function
         let search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
@@ -327,6 +443,17 @@
         var observer = new MutationObserver(highlight);
         observer.observe(element, {
     	  childList: true
+        });
+
+
+        // Check to highlight if user changed one of the 2 wind divs
+        var contentedited3 = document.querySelector("#w-direction");
+        contentedited3.addEventListener('input', function() {
+            highlight();
+        });
+        var contentedited4 = document.querySelector("#w-strength");
+        contentedited4.addEventListener('input', function() {
+            highlight();
         });
 
         function highlight() {
@@ -349,7 +476,10 @@
             // Check for gust and highlight winds containing them
             search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
             results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
-      }
+        }
+        
+
+
 
     });
 

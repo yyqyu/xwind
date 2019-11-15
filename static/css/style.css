@@ -50,7 +50,7 @@ a.white-hover:active {
 }
 
 .fix-broken-table3 {
-    width: 22%;
+    width: 26%;
     text-align: center;
 }
 
@@ -105,4 +105,32 @@ mark {
     color: white;
     padding: 0.11em 0.25em;
     border-radius: 0.5em;
+}
+
+
+[contenteditable=true]:empty:before{
+    content:attr(data-ph);
+    color:#576574;
+    opacity: 50%;
+    font-size: smaller;
+  }
+
+.headwind {
+    background: rgba(29,209,161, 0.3)
+}
+
+.tailwind {
+    background: rgba(254,202,87, 0.3);
+}
+
+.tailwind_strong {
+    background: rgba(255,107,107, 0.6);
+}
+
+.crosswind_medium {
+    background: rgba(254,202,87, 0.3) 
+}
+
+.crosswind_strong {
+    background: rgba(255,107,107, 0.6);
 }

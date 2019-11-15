@@ -336,9 +336,9 @@ def weather_types(ident):
                     elif taf.find('change_indicator').text == "TEMPO":
                         wx_type.append("TEMPO")
                     elif taf.find('change_indicator').text == "PROB":
-                        if taf.find('change_indicator').text == "30":
-                            wx_type.append("change_indicator")
-                        elif taf.find('change_indicator').text == "40":
+                        if taf.find('probability').text == "30":
+                            wx_type.append("PROB30")
+                        elif taf.find('probability').text == "40":
                             wx_type.append("PROB40")
                     elif taf.find('change_indicator').text == "BECMG":
                         wx_type.append("BECMG")
