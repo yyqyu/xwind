@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
+{% set active_page = "index" %}
 
 {% block title %}
-    index
+    application
 {% endblock %}
 
 {% block main %}
@@ -58,8 +59,8 @@
                 <div class="fix-broken-table2 h6 table-explan">
                     Crosswind
                 </div>
-                <div class="fix-broken-table2 h6 table-explan">
-                    Min CRFI (crosswind)
+                <div class="fix-broken-table2 h6 table-explan" data-toggle="modal" data-target="#crosswindchart">
+                    <a href="#" id="crfi_link">Min CRFI (crosswind)</a>
                 </div>
 
             </div>
@@ -76,6 +77,25 @@
     </div>
 
 </div>
+
+<div class="modal 8 fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="crosswind_chart" aria-hidden="true" id="crosswindchart">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">CFS Crosswind chart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+            </div>
+            <div class="modal-body">
+                    <img src="../static/media/crosswind_chart.png" id="chart-img">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Prevent "station" input field default action
     $('#stationform').submit(function (e) {
@@ -168,10 +188,28 @@
                 $.each(value, function(key2, value2) {
                     $("#rwy_table").append(
                     "<tr id=row_id_" + row_id + ">" +
-                    "<td class='fix-broken-table1'>" + value2 + "</td>");
+                    "<td class='fix-broken-table1 rwy_list'>" + value2 + "</td>");
                     row_id++;
                 });
             });
+
+            // Add rwy_data to runway tooltips
+            let rwy_data = data[0][10];
+            let n = 0;
+            let ids = "row_id_" + n;
+            $.each(rwy_data,function(k,v){
+                $.each(v, function(k2, v2) {
+                    $("#" + ids).children(".rwy_list").removeAttr("data-toggle");
+                    $("#" + ids).children(".rwy_list").removeAttr("data-placement");
+                    $("#" + ids).children(".rwy_list").removeAttr("title");
+                    $("#" + ids).children(".rwy_list").attr("data-toggle", "tooltip");
+                    $("#" + ids).children(".rwy_list").attr("data-placement", "bottom");
+                    $("#" + ids).children(".rwy_list").attr("title", "v2");
+                    console.log(v2)
+                    n++;
+                });
+            });
+
 
 
             // Add wind direction to the appropriate field
@@ -431,30 +469,30 @@
         var element = document.querySelector('#w-direction');
 
 
-        // Define variables to work with in highlight function
-        let search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
-        let search_term_pt2 = document.querySelector("#w-strength").textContent.padStart(2, '0');
-        let search_term = (search_term_pt1 + search_term_pt2 + "KT");
-        let results = document.querySelector("#wx");
+// Define variables to work with in highlight function
+let search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
+let search_term_pt2 = document.querySelector("#w-strength").textContent.padStart(2, '0');
+let search_term = (search_term_pt1 + search_term_pt2 + "KT");
+let results = document.querySelector("#wx");
 
-        // Add mutation observer (multiple browser support)
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-        // Call highlight function if 
-        var observer = new MutationObserver(highlight);
-        observer.observe(element, {
-    	  childList: true
-        });
+// Add mutation observer (multiple browser support)
+var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+// Call highlight function if 
+var observer = new MutationObserver(highlight);
+observer.observe(element, {
+  childList: true
+});
 
 
-        // Check to highlight if user changed one of the 2 wind divs
-        var contentedited3 = document.querySelector("#w-direction");
-        contentedited3.addEventListener('input', function() {
-            highlight();
-        });
-        var contentedited4 = document.querySelector("#w-strength");
-        contentedited4.addEventListener('input', function() {
-            highlight();
-        });
+// Check to highlight if user changed one of the 2 wind divs
+var contentedited3 = document.querySelector("#w-direction");
+contentedited3.addEventListener('input', function() {
+    highlight();
+});
+var contentedited4 = document.querySelector("#w-strength");
+contentedited4.addEventListener('input', function() {
+    highlight();
+});
 
         function highlight() {
             // Update results, search_term_pt1 and search_term_pt2 when function is ran

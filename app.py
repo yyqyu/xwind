@@ -11,7 +11,8 @@ from tempfile import mkdtemp
 
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
-                   weather_times, weather_types, get_ident, headings)
+                   weather_times, weather_types, get_ident, headings,
+                   runways_data)
 
 # Configure application
 app = Flask(__name__)
@@ -57,10 +58,16 @@ def index():
         wind_str = wind_strength(ident)
         wx_times = weather_times(ident)
         wx_types = weather_types(ident)
-        return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types)
+        rwy_data = runways_data(ident)
+        print(rwy_data)
+        return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data)
     else:
         return render_template("index.html")
 
+@app.route("/about", methods=["GET"])
+def about():
+    if request.method == 'GET':
+        return render_template("about.html")
 
 ''' def errorhandler(e):
     """Handle error"""

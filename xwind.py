@@ -360,6 +360,18 @@ def runways(ident):
         runway_list.append(r)
     return runway_list
 
+def runways_data(ident):
+    # data = []
+    rwy_data = db.execute(
+        "SELECT length_ft, length_ft, width_ft, width_ft, surface, surface "
+        "FROM runways "
+        "WHERE airport_ident=:ident "
+        "COLLATE NOCASE "
+        "ORDER BY length_ft DESC", ident=ident)
+    # for data in rwy_data:
+    #    data.append(data)
+    return rwy_data
+
 
 def headings(ident):
     headings_list = []
