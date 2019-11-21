@@ -199,13 +199,15 @@
             let ids = "row_id_" + n;
             $.each(rwy_data,function(k,v){
                 $.each(v, function(k2, v2) {
-                    $("#" + ids).children(".rwy_list").removeAttr("data-toggle");
-                    $("#" + ids).children(".rwy_list").removeAttr("data-placement");
-                    $("#" + ids).children(".rwy_list").removeAttr("title");
+                    ids = "row_id_" + n;
+                    // $("#" + ids).children(".rwy_list").removeAttr("data-toggle");
+                    // $("#" + ids).children(".rwy_list").removeAttr("data-placement");
+                    // $("#" + ids).children(".rwy_list").removeAttr("title");
                     $("#" + ids).children(".rwy_list").attr("data-toggle", "tooltip");
                     $("#" + ids).children(".rwy_list").attr("data-placement", "bottom");
-                    $("#" + ids).children(".rwy_list").attr("title", "v2");
-                    console.log(v2)
+                    $("#" + ids).children(".rwy_list").attr("title", v2);
+                    console.log(v2);
+                    console.log(ids);
                     n++;
                 });
             });
@@ -303,7 +305,7 @@
                     headings_list.push(value2);
                 });
             });
-            
+
             // RWY HEADINGS
             function calculate(data) {
                 let rwy_headings = data[0][5];
@@ -364,7 +366,7 @@
 
             document.getElementById("loading").classList.add("remove");
             document.getElementById("loading").classList.remove("seen");
-            
+
 
             function interpolate(crosswind) {
                 if (crosswind <= 10){
@@ -456,7 +458,7 @@
                     }
                 }
             }
-        }   
+        }
 
     })
 
@@ -464,7 +466,7 @@
     window.addEventListener('load', function() {
 
 
-        /* Watch #w-direction div for change 
+        /* Watch #w-direction div for change
         (will trigger even if winds don't change since winds will still be removed and added by iterate function)*/
         var element = document.querySelector('#w-direction');
 
@@ -477,7 +479,7 @@ let results = document.querySelector("#wx");
 
 // Add mutation observer (multiple browser support)
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-// Call highlight function if 
+// Call highlight function if
 var observer = new MutationObserver(highlight);
 observer.observe(element, {
   childList: true
@@ -498,7 +500,7 @@ contentedited4.addEventListener('input', function() {
             // Update results, search_term_pt1 and search_term_pt2 when function is ran
             results.innerHTML = document.querySelector("#wx").innerHTML;
             search_term_pt1 = document.querySelector("#w-direction").textContent.padStart(3, '0');
-            
+
             // Replace value of 000 by VRB in the search substring
             if (search_term_pt1 == "000") {
               search_term_pt1 = "VRB";
@@ -515,7 +517,7 @@ contentedited4.addEventListener('input', function() {
             search_gust_string = (search_term_pt1 + search_term_pt2 + 'G\\d\\dKT');
             results.innerHTML = results.innerHTML.replace(new RegExp(search_gust_string, "gi"), (match) => `<mark>${match}</mark>`);
         }
-        
+
 
 
 
