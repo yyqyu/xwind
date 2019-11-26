@@ -12,7 +12,7 @@ from tempfile import mkdtemp
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
                    weather_times, weather_types, get_ident, headings,
-                   runways_data)
+                   runways_data, get_code)
 
 # Configure application
 app = Flask(__name__)
@@ -47,19 +47,19 @@ db = SQL("sqlite:///database/xwind.db")
 def index():
 
     if request.method == 'POST':
-        
+
         ident = get_ident(request.form.get("station"))
+        code = get_code(ident)
         metar_text = last_metar_raw(ident)
         taf_text = format_taf(last_taf_raw(ident))
         airport_name = get_name(ident)
-        rwy_list = runways(ident)
-        heading_list = headings(ident)
+        rwy_list = runways(code)
+        heading_list = headings(code)
         wind_dir = wind_direction(ident)
         wind_str = wind_strength(ident)
         wx_times = weather_times(ident)
         wx_types = weather_types(ident)
-        rwy_data = runways_data(ident)
-        print(rwy_data)
+        rwy_data = runways_data(code)
         return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data)
     else:
         return render_template("index.html")

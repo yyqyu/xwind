@@ -72,6 +72,12 @@ def search(station):
     return ident
 
 
+def get_code(ident):
+    code = db.execute("SELECT id FROM airports WHERE ident=:ident", ident=ident)[0]['id']
+
+    return code
+
+
 # Retrieve the raw text of last available TAF
 def last_metar_raw(ident):
     url_response = urllib.request.urlopen(
@@ -327,60 +333,71 @@ def weather_types(ident):
     if not (root_taf.findall('data/TAF')):
         wx_type.append(" ")
     else:
-        wx_type.append("FROM")
+        wx_type.append("TAF FROM")
         for taf in islice(root_taf.findall('data/TAF/forecast'), 1, None):
             try:
                 if taf.find('wind_dir_degrees').text:
                     if taf.find('change_indicator').text == "FM":
-                        wx_type.append("FROM")
+                        wx_type.append("TAF FROM")
                     elif taf.find('change_indicator').text == "TEMPO":
-                        wx_type.append("TEMPO")
+                        wx_type.append("TAF TEMPO")
                     elif taf.find('change_indicator').text == "PROB":
                         if taf.find('probability').text == "30":
-                            wx_type.append("PROB30")
+                            wx_type.append("TAF PROB30")
                         elif taf.find('probability').text == "40":
-                            wx_type.append("PROB40")
+                            wx_type.append("TAF PROB40")
                     elif taf.find('change_indicator').text == "BECMG":
-                        wx_type.append("BECMG")
+                        wx_type.append("TAF BECMG")
             except Exception:
                 continue
 
     return wx_type
 
 
-def runways(ident):
+def runways(code):
     runway_list = []
     rwys = db.execute(
-        "SELECT runways.le_ident, runways.xhe_ident "
+        "SELECT le_ident, xhe_ident "
         "FROM runways "
-        "WHERE runways.airport_ident=:ident "
+        "WHERE airport_ref=:code AND closed=0 "
         "COLLATE NOCASE "
-        "ORDER BY length_ft DESC", ident=ident)
+        "ORDER BY length_ft DESC", code=code)
     for r in rwys:
         runway_list.append(r)
     return runway_list
 
-def runways_data(ident):
-    # data = []
+def runways_data(code):
+    data = []
     rwy_data = db.execute(
         "SELECT length_ft, length_ft, width_ft, width_ft, surface, surface "
         "FROM runways "
-        "WHERE airport_ident=:ident "
+        "WHERE airport_ref=:code AND closed=0 "
         "COLLATE NOCASE "
-        "ORDER BY length_ft DESC", ident=ident)
-    # for data in rwy_data:
-    #    data.append(data)
-    return rwy_data
+        "ORDER BY length_ft DESC", code=code)
+    for info in rwy_data:
+        if info["surface"] == "ASP":
+            test = str(info['length_ft']) + "x" + str(info['width_ft']) + " Asphalt"
+            data.append(test)
+        elif info["surface"] == "CON":
+            test = str(info['length_ft']) + "x" + str(info['width_ft']) + " Concrete"
+            data.append(test)
+        elif info["surface"] == "GVL":
+            test = str(info['length_ft']) + "x" + str(info['width_ft']) + " Gravel"
+            data.append(test)
+        else:
+            test = str(info['length_ft']) + "x" + str(info['width_ft']) + " " + info["surface"]
+            data.append(test)
 
+    return data
 
-def headings(ident):
+def headings(code):
     headings_list = []
     headings = db.execute(
-        "SELECT runways.le_heading_degT, runways.xhe_heading_degT "
+        "SELECT le_heading_degT, xhe_heading_degT "
         "FROM runways "
-        "WHERE runways.airport_ident=:ident "
+        "WHERE airport_ref=:code AND closed=0 "
         "COLLATE NOCASE "
-        "ORDER BY length_ft DESC", ident=ident)
+        "ORDER BY length_ft DESC", code=code)
     for head in headings:
         headings_list.append(head)
     return headings_list
