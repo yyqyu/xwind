@@ -96,12 +96,38 @@
     </div>
 </div>
 
+<button onclick="topFunction()" id="backtotop" title="Go to top">^</button>
+
+
 <script>
+
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+        $('#backtotop').stop().fadeTo(300,1);
+
+      } else {
+        $('#backtotop').stop().fadeTo(300,0);
+      }
+    }
+
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+
+
     // Prevent "station" input field default action
     $('#stationform').submit(function (e) {
         e.preventDefault();
         return false;
     });
+
 
     // Only allow numbers in contenteditable table
     function testCharacter(event) {
@@ -220,27 +246,49 @@
 
             // Add wind direction to first conenteditable cell
             let wind_dir = document.getElementById("w-direction");
-            wind_dir.innerHTML = data[0][6][counter1].padStart(3, '0');
+
+            // If no weather, inputs nothing instead of double 00
+            function direction(data) {
+                if (data[0][6][counter1].length == 1) {
+                    $('#w-direction').html("0");
+                }
+                else {
+                    $('#w-direction').html(data[0][6][counter1].padStart(3, '0'));
+                }
+            }
+
+            direction(data);
             $('#next').click(function() {
                 if (counter1 < (data[0][6].length - 1)) {
                 counter1++;
                 $('#w-direction').empty();
-                $('#w-direction').html(data[0][6][counter1].padStart(3, '0'));
+                direction(data);
                 }
             });
             $('#previous').click(function() {
                 if(counter1>0){
                 counter1--;
                 $('#w-direction').empty();
-                $('#w-direction').html(data[0][6][counter1].padStart(3, '0'));
+                direction(data);
                 }
             });
 
             // Add wind strength to second conenteditable cell
             let wind_str = document.getElementById("w-strength");
             /* wind_str.innerHTML = (data[0] + ' kt'); <-- If I want to add kt at the end.
-                                                           (But what if user manually change winds?)*/
-            wind_str.innerHTML = data[0][7][counter2];
+                                                         (But what if user manually change winds?)*/
+
+            // If no weather, inputs nothing instead of double 00
+            function strength(data) {
+                if (data[0][7][counter2] == " ") {
+                    $('#w-strength').html("");
+                }
+                else {
+                    $('#w-strength').html(data[0][7][counter2]);
+                }
+            }
+
+            strength(data);
             $('#next').click(function() {
                 if (counter2 < (data[0][7].length - 1)) {
                 counter2++;
@@ -255,8 +303,6 @@
                 $('#w-strength').html(data[0][7][counter2]);
                 }
             });
-
-
 
 
             // Add wx_time to wx_dir_str div
@@ -403,6 +449,9 @@
             // Toggle state of loading div once everything is finished loading
             document.getElementById("loading").classList.add("remove");
             document.getElementById("loading").classList.remove("seen");
+
+
+            document.getElementById('airportname').scrollIntoView();
 
             // Interpolate between different values for Min CRFI calculation
             function interpolate(crosswind) {

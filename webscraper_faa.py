@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import jsbeautifier
 from cs50 import get_string
+import re
 
 # Proof of concept
 # Web scraper for FAA notams from https://notams.aim.faa.gov/notamSearch/
@@ -39,15 +40,29 @@ def main():
                              data=param)
 
     # Print to terminal some info to ensure request went well.
-    print(response.status_code)
-    print(response.headers['Content-Type'])
+    #print(response.status_code)
+    #print(response.headers['Content-Type'])
+    #print(type(response.json()))
 
-    to_write = jsbeautifier.beautify(response.text)
+    for key, value in response.json().items():
+        try:
+            for data in list(value):
+                notams = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
+                print(notams, '\n')
+                #print(type(data))
+                #print(data['keyword'])
+                #print(notams['icaoMessage'], '\n\n')
+        except:
+            pass
+
+
+
+    #to_write = jsbeautifier.beautify(response.text)
 
     # Write all notams into a file in JSON format
-    filename = (f"./test_scraper/response_{airport}.js")
-    with open(filename, "w") as file:
-        file.write(to_write)
+    #filename = (f"./test_scraper/response_{airport}.js")
+    #with open(filename, "w") as file:
+    #    file.write(to_write)
 
 
 if __name__ == "__main__":
