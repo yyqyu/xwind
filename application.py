@@ -1,5 +1,6 @@
-# import os
+import os
 import json
+import sqlalchemy
 
 from cs50 import SQL
 from flask import Flask, render_template, request, jsonify, session
@@ -79,3 +80,9 @@ def about():
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler) '''
+
+
+if __name__ == '__main__':
+    app.debug = True
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
