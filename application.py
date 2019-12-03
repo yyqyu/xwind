@@ -6,6 +6,7 @@ from cs50 import SQL
 from flask import Flask, render_template, request, jsonify, session, redirect
 from flask_session import Session
 from tempfile import mkdtemp
+from flask_talisman import Talisman
 # from werkzeug.exceptions import (default_exceptions, HTTPException,
 #                                  InternalServerError)
 # from werkzeug.security import check_password_hash, generate_password_hash
@@ -20,6 +21,27 @@ app = Flask(__name__)
 SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
+
+SELF = "'self'"
+talisman = Talisman(
+    app,
+    content_security_policy={
+        'default-src': SELF,
+        'img-src': '*',
+        'script-src': [
+            SELF,
+            'some.cdn.com',
+        ],
+        'style-src': [
+            SELF,
+            'another.cdn.com',
+        ],
+    },
+    content_security_policy_nonce_in=['script-src'],
+    feature_policy={
+        'geolocation': '\'none\'',
+    }
+)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -55,6 +77,9 @@ db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199
 
 
 @app.route("/", methods=["GET", "POST"])
+@talisman(
+    force_https='True'
+)
 def index():
 
     if request.method == 'POST':
