@@ -1,25 +1,3 @@
-
-
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {scrollFunction()};
-
-    function scrollFunction() {
-      if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
-        $('#backtotop').stop().fadeTo(300,1);
-
-      } else {
-        $('#backtotop').stop().fadeTo(300,0);
-      }
-    }
-
-
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-
-
     // Prevent "station" input field default action
     $('#stationform').submit(function (e) {
         e.preventDefault();
@@ -348,9 +326,10 @@
             document.getElementById("loading").classList.add("remove");
             document.getElementById("loading").classList.remove("seen");
 
-
-            document.getElementById('airportname').scrollIntoView();
-
+            if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+                document.getElementById('airportname').scrollIntoView();
+            }
+            
             // Interpolate between different values for Min CRFI calculation
             function interpolate(crosswind) {
                 if (crosswind <= 10){
