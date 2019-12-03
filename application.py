@@ -22,7 +22,7 @@ SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 
-SELF = "'self'"
+'''SELF = "'self'"
 talisman = Talisman(
     app,
     content_security_policy={
@@ -41,7 +41,7 @@ talisman = Talisman(
     feature_policy={
         'geolocation': '\'none\'',
     }
-)
+)'''
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -77,9 +77,9 @@ db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199
 
 
 @app.route("/", methods=["GET", "POST"])
-@talisman(
-    force_https='True'
-)
+###@talisman(
+###    force_https='True'
+###)
 def index():
 
     if request.method == 'POST':
