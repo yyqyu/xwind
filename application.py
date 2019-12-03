@@ -22,26 +22,37 @@ SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
 Session(app)
 
-'''SELF = "'self'"
+SELF = "'self'"
 talisman = Talisman(
     app,
     content_security_policy={
-        'default-src': SELF,
-        'img-src': '*',
+        'default-src': [
+            SELF,
+            'fonts.googleapis.com',
+            'fonts.gstatic.com',
+        ],
+        'img-src': [
+            '*',
+            SELF,
+            'www.w3.org',
+            'data:',
+            'https:;',
+        ],
         'script-src': [
             SELF,
-            'some.cdn.com',
         ],
         'style-src': [
             SELF,
-            'another.cdn.com',
+            'fonts.googleapis.com',
+            'fonts.gstatic.com',
+
         ],
     },
     content_security_policy_nonce_in=['script-src'],
     feature_policy={
         'geolocation': '\'none\'',
     }
-)'''
+)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
