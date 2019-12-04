@@ -359,8 +359,7 @@ def runways(code):
     rwys = db.execute(
         "SELECT le_ident, xhe_ident "
         "FROM runways "
-        "WHERE airport_ref=:code AND closed=0 "
-        "COLLATE NOCASE "
+        "WHERE airport_ref=:code AND closed='0' "
         "ORDER BY length_ft DESC", code=code)
     for r in rwys:
         runway_list.append(r)
@@ -371,8 +370,7 @@ def runways_data(code):
     rwy_data = db.execute(
         "SELECT length_ft, length_ft, width_ft, width_ft, surface, surface "
         "FROM runways "
-        "WHERE airport_ref=:code AND closed=0 "
-        "COLLATE NOCASE "
+        "WHERE airport_ref=:code AND closed='0' "
         "ORDER BY length_ft DESC", code=code)
     for info in rwy_data:
         if info["surface"] == "ASP":
@@ -393,10 +391,9 @@ def runways_data(code):
 def headings(code):
     headings_list = []
     headings = db.execute(
-        "SELECT le_heading_degT, xhe_heading_degT "
+        'SELECT "le_heading_degT", "xhe_heading_degT" '
         "FROM runways "
-        "WHERE airport_ref=:code AND closed=0 "
-        "COLLATE NOCASE "
+        "WHERE airport_ref=:code AND closed='0' "
         "ORDER BY length_ft DESC", code=code)
     for head in headings:
         headings_list.append(head)
