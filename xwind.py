@@ -11,7 +11,7 @@ from itertools import islice
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///database/xwind.db")
+db = SQL("postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei")
 
 # Get ident code
 def get_ident(station):
