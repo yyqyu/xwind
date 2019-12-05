@@ -67,7 +67,7 @@
                 success: function(result) {
                     data.push(result);
                     iterate(data);
-                    console.log(data);
+                    //console.log(data);
             }
 
         });
