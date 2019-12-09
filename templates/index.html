@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block main %}
+{% if not session.user_id %}
+<div class="alert alert-warning alert-dismissible fade show centered" role="alert">
+        <span><strong>Warning!</strong> Still in beta stage. Use at your own risk.</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}
+<div class="container">    
 <div class="row">
     <div class="col-12 mt-4">
         <form action="/" method="post" id="stationform">
@@ -12,11 +21,6 @@
             <div class="h6 sm-indication mt-1 ml-1">Enter airport code or name</div>
         </form>
     </div>
-    <!--
-    <div class="col-12 col-md-4 mt-4">
-
-    </div>
-    -->
 </div>
 
 <div class="row">
@@ -27,24 +31,24 @@
                 </div>
         </div>
 
-    <div class="col-12 col-md-8 mt-4">
+    <div class="col-12 col-md-7 mt-4">
 
         <p class ="text-center" id="airportname"></p>
 
         <table class="table table-bordered shadow-sm hidden" id="time_dir_str">
             <thead>
                 <tr>
-                    <th class = "fix-broken-table1 hidden" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
-                    <th class = "fix-broken-table2 tbcontentedit" data-ph="Wind direction" contenteditable="true" type="number" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
-                    <th class = "fix-broken-table2 tbcontentedit" data-ph="Wind speed" contenteditable="true" type="number" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
+                    <th class = "fix-broken-table1 toprow hidden" data-ph="Weather source" id="wxtypeandtime"><span id="wx_type"></span> <span id="wx_time"></span></td>
+                    <th class = "fix-broken-table2 toprow tbcontentedit" data-ph="Wind direction" contenteditable="true" type="number" id="w-direction" onkeypress="return testCharacter(event);">{{ wind_dir | first }}</td>
+                    <th class = "fix-broken-table2 toprow tbcontentedit" data-ph="Wind speed" contenteditable="true" type="number" id="w-strength" onkeypress="return testCharacter(event);">{{ wind_str | first }}</td>
                 </tr>
             </thead>
         </table>
         <div class="container">
             <div class="row">
                 <div class="col-12 mt mb-3 centered">
-                    <button type="button" class="btn btn-outline-dark btn-sm mr-4 hidden" id="previous">Previous</button>
-                    <button type="button" class="btn btn-outline-dark btn-sm ml-4 hidden" id="next">Next</button>
+                    <button type="button" class="btn btn-outline-dark btn-sm mr-4 rounded hidden" id="previous">Previous</button>
+                    <button type="button" class="btn btn-outline-dark btn-sm ml-4 rounded hidden" id="next">Next</button>
                 </div>
             </div>
             <div class="row hidden" id="table-header">
@@ -70,9 +74,10 @@
             </tbody>
         </table>
     </div>
-    <div class="col-12 col-md-4 mt-4 fira-font h6 formatting" id="wx">
-        <p class = "formatting" id="metar"></p><br>
+    <div class="col-12 col-md-5 mt-4 fira-font h6" id="wx">
+        <p class = "formatting" id="metar"></p>
         <ul class = "formatting" id="taf"></ul>
+        <p class = "formatting" id="rsc"></p>
     </div>
 
 </div>
@@ -93,6 +98,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 

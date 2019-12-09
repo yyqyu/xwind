@@ -50,6 +50,7 @@
         $("#rwy_table").empty();
         $("#taf").empty();
         $("#metar").empty();
+        $("#rsc").empty();
         $("w-direction").empty();
         $("w-strength").empty();
         $("#airportname").empty();
@@ -67,7 +68,7 @@
                 success: function(result) {
                     data.push(result);
                     iterate(data);
-                    //console.log(data);
+                    console.log(data);
             }
 
         });
@@ -119,13 +120,33 @@
                 $("#taf").append("<li>" + item + "</li>");
             });
 
+            let notams = data[0][11];
+            for(i=0; i < notams.length; i++){
+                if(notams[i][0].match('NOTAMJ')){
+                    //$("#rsc").append(notams[i][0]);
+                    console.log(notams[i][0])
+                    let value = notams[i][0].split(/\n+/g);
+                    value.shift();
+                    rsc = value.join("\n")
+                    $("#rsc").append(rsc);
+                }
+            }
+
+            //notams.forEach(function(item){
+            //    if (data[0][11].forEach.match("RSC")){
+            //        $("#rsc").append(item);
+            //    }
+            //});
 
             // Add wind direction to first conenteditable cell
             let wind_dir = document.getElementById("w-direction");
 
             // If no weather, inputs nothing instead of double 00
             function direction(data) {
-                if (data[0][6][counter1].length == 1) {
+                if ((data[0][6][counter1].length == 1) && (data[0][7][counter2] == " ")) {
+                    $('#w-direction').html("");
+                }
+                else if (data[0][6][counter1].length == 1) {
                     $('#w-direction').html("0");
                 }
                 else {
@@ -218,6 +239,8 @@
                 $('#wx_type').html(data[0][9][counter4]);
                 }
             });
+            
+            
 
             // Get a list of headings in SAME ORDER as runway_list
             let headings_list = [];

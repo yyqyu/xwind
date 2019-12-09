@@ -1,12 +1,11 @@
 import requests
-from bs4 import BeautifulSoup
-import jsbeautifier
 from cs50 import get_string
 import re
 
 
-def main():
-    airport = get_string("Canadian airport: ")
+def navcanada(ident):
+    airport = ident
+    print(airport)
 
     response = requests.get(
         f"https://plan.navcanada.ca/weather/api/search/en?",
@@ -23,6 +22,7 @@ def main():
         params={'point': f'{coord1},{coord2},{airport},site', 'alpha': 'notam'}
         )
 
+    notams_list = []
     # Iterate over result from 'notams', by skipping the first element
     for key, value in list(notams.json().items())[1:]:
         for data in value:
@@ -34,7 +34,9 @@ def main():
                 continue
             else:
                 # Remove french part of notams
-                print(entry[:entry.find('\n\nFR:')], ')\n')
+                notams_list.append((entry[:entry.find('\n\nFR:')], ')\n'))
+
+    return notams_list
 
     # Only show first element (now, notam count and messages)
     #for key, value in list(notams.json().items())[:1]:

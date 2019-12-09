@@ -12,6 +12,7 @@ def main():
 
     # Ask user for airport
     airport = get_string("Airport: ")
+    offset = "0"
 
     param = {"searchType": '0',
              "designatorsForLocation": airport,
@@ -31,11 +32,11 @@ def main():
              "flightPathIncludeTfr": "false",
              "flightPathIncludeRegulatory": "false",
              "flightPathResultsType": "ALL NOTAMs",
-             "offset": "0",
+             "offset": offset,  # need to change this otherwise it only shows the first 30 notams....
              "notamsOnly": "false",
              }
 
-    response = requests.get("https://notams.aim.faa.gov/notamSearch")
+    #response = requests.get("https://notams.aim.faa.gov/notamSearch")
     response = requests.post("https://notams.aim.faa.gov/notamSearch/search",
                              data=param)
 
@@ -44,14 +45,16 @@ def main():
     #print(response.headers['Content-Type'])
     #print(type(response.json()))
 
+
     for key, value in response.json().items():
         try:
             for data in list(value):
-                notams = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
-                print(notams, '\n')
-                #print(type(data))
-                #print(data['keyword'])
-                #print(notams['icaoMessage'], '\n\n')
+                icao = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
+                trad = data['traditionalMessage']
+                if icao == ' ':
+                    print(trad, '\n')
+                else:
+                    print(icao, '\n')
         except:
             pass
 

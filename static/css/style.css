@@ -49,12 +49,14 @@ a.white-hover:active {
     width: 26%;
     text-align: center;
 }
+.toprow {
+    height: 4.6em
+}
 
 .fix-broken-table3 {
     width: 26%;
     text-align: center;
 }
-
 
 .table-explan {
     font-size: small;
@@ -64,6 +66,7 @@ a.white-hover:active {
     list-style: none;
     padding: 0;
     border: none;
+    white-space: pre-wrap;
 }
 
 .text-center{
@@ -173,7 +176,9 @@ mark {
     font-size: smaller;
 }
 
-
+#wxtypeandtime{
+    vertical-align: middle;
+}
 
 #backtotop {
     display: none;
@@ -208,14 +213,14 @@ mark {
     vertical-align: middle;
 }
 
-#previous {
+.rounded {
     border-radius: 10px;
     border: none;
     box-shadow: 0px 0px 5px lightgrey;
     padding: 10px;
 }
 
-#previous:hover {
+.rounded:hover {
     border: none;
     box-shadow: 0px 0px 7px grey;
     padding: 10px;
@@ -223,16 +228,3 @@ mark {
 }
 
 
-#next {
-    border-radius: 10px;
-    border: none;
-    box-shadow: 0px 0px 5px lightgrey;
-    padding: 10px;
-}
-
-#next:hover {
-    border: none;
-    box-shadow: 0px 0px 7px grey;
-    padding: 10px;
-    transition: 0.3s;
-}

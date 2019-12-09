@@ -8,6 +8,7 @@ from cs50 import SQL
 from flask import redirect, session, request
 from functools import wraps
 from itertools import islice
+from webscraper_navcan import navcanada
 
 
 # Configure CS50 Library to use SQLite database
@@ -398,6 +399,14 @@ def headings(code):
     for head in headings:
         headings_list.append(head)
     return headings_list
+
+
+def notams(ident):
+    if ident[0] == "C" and len(ident) <= 4 :
+        return navcanada(ident)
+    else:
+        return ""
+
 
 
 '''def escape(s):

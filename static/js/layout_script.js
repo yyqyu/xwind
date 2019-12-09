@@ -4,7 +4,7 @@ $(function () {
 
 // Copyright 
 footer = document.getElementById("footer");
-footer.innerHTML = "<br><br><br><br><br><br><br><br><br><br><br> &copy " + (new Date().getFullYear()) + " Xwind" + "<br><br><br>";
+footer.innerHTML = "<br><br><br><br><br><br><br><br><br><br><br> &copy " + (new Date().getFullYear()) + " Xwind v0.8" + "<br><br><br>";
 
 
 // When the user scrolls down 20px from the top of the document, show the button

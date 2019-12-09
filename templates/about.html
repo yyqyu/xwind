@@ -6,15 +6,21 @@
 {% endblock %}
 
 {% block main %}
-
+<div class="container">  
 <div class="row">
     <div class="col-12" id="about">
         <br><br>
+        <h6>v0.8</h6>
+        - Added login functionalities for select users. <br>
+        - Added beta alert warning on main application page <br>
+        - Added RSC conditions for Canadian airports on main application page.<br>
+        - Known bug: hitting the Enter key multiple times will make multiple request and append data multiple times.<br>
+        <br><br>
         <h6>v0.7</h6>
         - Initial beta release on <a href="https://www.heroku.com" target="_blank">Heroku.com</a> <br>
-        - Features available: Wind and CRFI calculations, runway data tooltips, wind cycling when pressing "Next" or "Previous" <br>
-        - Known bugs: 
+        - Features available: Airports and runway databse, wind and CRFI calculations, runway data tooltips, wind selection. <br>
         <br><br><br><br>
+        To report a bug or for any inquiries, please feel free to reach me at <a href="mailto:admin@xwind.app">admin@xwind.app</a>
 
         <!-- <br><br>
         <p>Xwind is there to help make your operation smarter. Xwind is a free online weather and NOTAMs provider.<br>
@@ -23,6 +29,7 @@
         <br><br><br><br><br><br><br><br>
 
     </div>
+</div>
 </div>
 
 {% endblock %}
