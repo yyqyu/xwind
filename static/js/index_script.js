@@ -124,7 +124,7 @@
             for(i=0; i < notams.length; i++){
                 if(notams[i][0].match('NOTAMJ')){
                     //$("#rsc").append(notams[i][0]);
-                    console.log(notams[i][0])
+                    console.log(notams[i][0]);
                     let value = notams[i][0].split(/\n+/g);
                     value.shift();
                     rsc = value.join("\n")

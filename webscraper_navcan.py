@@ -24,7 +24,8 @@ def navcanada(ident):
 
     notams_list = []
     # Iterate over result from 'notams', by skipping the first element
-    for key, value in list(notams.json().items())[1:]:
+    # print(list(notams.json().items())[0:1])
+    for key, value in list(notams.json().items())[1:]:   # BUG TO FIX HERE, RSC CYVO NOT SHOWING LAST DIGIT
         for data in value:
             # Store data in new variable for readability
             entry = data['text']
@@ -32,10 +33,16 @@ def navcanada(ident):
             # Check for french RSC
             if '000000F' in entry :
                 continue
+            elif 'NOTAMJ' in entry :
+                print(entry)
+                notams_list.append((entry, '\n'))
             else:
                 # Remove french part of notams
-                notams_list.append((entry[:entry.find('\n\nFR:')], ')\n'))
+                notams_list.append((entry[:entry.find('\n\nFR:')], '\n'))
+                print(entry.find('\n\nFR:'))
+                # Adding +1 solved the last character notam issue
 
+    print(notams_list)
     return notams_list
 
     # Only show first element (now, notam count and messages)
