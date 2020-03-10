@@ -34,15 +34,15 @@ def navcanada(ident):
             if '000000F' in entry :
                 continue
             elif 'NOTAMJ' in entry :
-                print(entry)
+                # print(entry)
                 notams_list.append((entry, '\n'))
             else:
                 # Remove french part of notams
                 notams_list.append((entry[:entry.find('\n\nFR:')], '\n'))
-                print(entry.find('\n\nFR:'))
+                # print(entry.find('\n\nFR:'))
                 # Adding +1 solved the last character notam issue
 
-    print(notams_list)
+    # print(notams_list)
     return notams_list
 
     # Only show first element (now, notam count and messages)
