@@ -16,10 +16,11 @@ db = SQL("postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199
 
 # Get ident code
 def get_ident(station):
+    '''# That part is being called when using main app
     if not request.form.get("station"):
         station = request.args.get("station")
     else:
-        request.form.get("station")
+        request.form.get("station")'''
 
     if len(station) <= 4:
         try:
@@ -401,7 +402,7 @@ def headings(code):
     return headings_list
 
 
-def notams(ident):
+def get_notams(ident):
     if ident[0] == "C" and len(ident) <= 4 :
         return navcanada(ident)
     else:

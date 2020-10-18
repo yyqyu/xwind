@@ -16,7 +16,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
                    weather_times, weather_types, get_ident, headings,
-                   runways_data, get_code, notams)
+                   runways_data, get_code, get_notams)
 
 # Configure application
 app = Flask(__name__)
@@ -77,33 +77,48 @@ db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    return render_template("index.html")
 
-    if request.method == 'POST':
 
-        ident = get_ident(request.form.get("station"))
-        code = get_code(ident)
-        metar_text = last_metar_raw(ident)
-        taf_text = format_taf(last_taf_raw(ident))
-        airport_name = get_name(ident)
-        rwy_list = runways(code)
-        heading_list = headings(code)
-        wind_dir = wind_direction(ident)
-        wind_str = wind_strength(ident)
-        wx_times = weather_times(ident)
-        wx_types = weather_types(ident)
-        rwy_data = runways_data(code)
-        notams_list = notams(ident)
-        return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data, notams_list)
-    else:
-        return render_template("index.html")
-
+@app.route("/index_app", methods=["GET", "POST"])
+def index_app():
+    station = request.args.get("form_data")
+    ident = get_ident(station)
+    code = get_code(ident)
+    metar_text = last_metar_raw(ident)
+    taf_text = format_taf(last_taf_raw(ident))
+    airport_name = get_name(ident)
+    rwy_list = runways(code)
+    heading_list = headings(code)
+    wind_dir = wind_direction(ident)
+    wind_str = wind_strength(ident)
+    wx_times = weather_times(ident)
+    wx_types = weather_types(ident)
+    rwy_data = runways_data(code)
+    notams_list = get_notams(ident)
+    return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data, notams_list)
 
 @app.route("/about", methods=["GET"])
 def about():
     if request.method == 'GET':
         return render_template("about.html")
 
-'''
+@app.route("/notams", methods=["GET", "POST"])
+def notams():
+    return render_template("notams.html")
+
+@app.route("/notams_app", methods=["GET", "POST"])
+def notams_app():
+    station = request.args.get("form_data")
+    print(station)
+    ident = get_ident(station)
+    notams_list = get_notams(ident)
+    airport_name = get_name(ident)
+    code = get_code(ident)
+    #print(code)
+    return jsonify(notams_list, airport_name, code)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == 'GET':
@@ -135,7 +150,7 @@ def register():
                 session["user_id"] = db.execute("SELECT id FROM users WHERE username = :username",
                                                 username=username)[0]["id"]
                 flash('You have been successfully registered', 'danger')
-                return redirect("/")'''
+                return redirect("/")
 
 @app.route("/check", methods=["GET"])
 def check():

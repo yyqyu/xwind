@@ -52,8 +52,8 @@
                         <li class="nav-item {{ 'active' if active_page == 'weather' else '' }} btn btn-sm btn-light mr-3 disabled" data-toggle="tooltip" data-placement="bottom" title="Coming soon">
                             <a class="nav-link " href="#" ="true">Weather</a>
                         </li>
-                        <li class="nav-item {{ 'active' if active_page == 'notams' else '' }} btn btn-sm btn-light mr-3 disabled" data-toggle="tooltip" data-placement="bottom" title="Coming soon">
-                            <a class="nav-link " href="#" ="true">Notams</a>
+                        <li class="nav-item {{ 'active' if active_page == 'notams' else '' }} btn btn-sm btn-light mr-3">
+                            <a class="nav-link " href="/notams">Notams</a>
                         </li>
                         {% if session.user_id %}
                         <li class="nav-item {{ 'active' if active_page == 'airports' else '' }} btn btn-sm btn-light mr-3 disabled" data-toggle="tooltip" data-placement="bottom" title="Coming soon">

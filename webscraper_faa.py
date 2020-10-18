@@ -11,8 +11,9 @@ import re
 def main():
 
     # Ask user for airport
+    # !!!! Make multiple requests at the same time with offsets of 0 to whatever, if nothing comesback stop, then aggregate result.
     airport = get_string("Airport: ")
-    offset = "0"
+    offset = "120"
 
     param = {"searchType": '0',
              "designatorsForLocation": airport,

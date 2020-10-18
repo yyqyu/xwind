@@ -15,7 +15,7 @@ def navcanada(ident):
     response_split = response.text.split('"')
     coord1 = response_split[15]
     coord2 = response_split[17]
-    # print(coord1, coord2)
+    print(coord1, coord2)
 
     notams = requests.get(
         f"https://plan.navcanada.ca/weather/api/alpha/?",
@@ -25,7 +25,7 @@ def navcanada(ident):
     notams_list = []
     # Iterate over result from 'notams', by skipping the first element
     # print(list(notams.json().items())[0:1])
-    for key, value in list(notams.json().items())[1:]:   # BUG TO FIX HERE, RSC CYVO NOT SHOWING LAST DIGIT
+    for key, value in list(notams.json().items())[1:]:
         for data in value:
             # Store data in new variable for readability
             entry = data['text']

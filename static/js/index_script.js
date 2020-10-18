@@ -61,10 +61,14 @@
         let counter3 = 0;
         let counter4 = 0;
         let counter5 = 0;
+        form_data = document.getElementById('station').value;
+        console.log(form_data);
         $.ajax({
-                type: "POST",
-                url: '/?station=' + station.value,
+                type: "GET",
+                url: '/index_app',
+                data: {form_data},
                 dataType: 'json',
+                cache: false,
                 success: function(result) {
                     data.push(result);
                     iterate(data);
