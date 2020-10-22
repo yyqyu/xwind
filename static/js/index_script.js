@@ -62,7 +62,6 @@
         let counter4 = 0;
         let counter5 = 0;
         form_data = document.getElementById('station').value;
-        console.log(form_data);
         $.ajax({
                 type: "GET",
                 url: '/index_app',
@@ -72,7 +71,6 @@
                 success: function(result) {
                     data.push(result);
                     iterate(data);
-                    console.log(data);
             }
 
         });
@@ -128,7 +126,6 @@
             for(i=0; i < notams.length; i++){
                 if(notams[i][0].match('NOTAMJ')){
                     //$("#rsc").append(notams[i][0]);
-                    console.log(notams[i][0]);
                     let value = notams[i][0].split(/\n+/g);
                     value.shift();
                     rsc = value.join("\n")
