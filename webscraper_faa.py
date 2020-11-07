@@ -13,12 +13,14 @@ def main():
     # Ask user for airport
     # !!!! Make multiple requests at the same time with offsets of 0 to whatever, if nothing comesback stop, then aggregate result.
     airport = get_string("Airport: ")
-    offset = "120"
+    offset = "150"
 
     param = {"searchType": '0',
              "designatorsForLocation": airport,
              "latMinutes": "0",
-             "latSeconds": "0",
+             "latSeconds": "0"
+Wrong Airport Landings 
+,
              "longMinutes": "0",
              "longSeconds": "0",
              "radius": "10",
@@ -42,11 +44,11 @@ def main():
                              data=param)
 
     # Print to terminal some info to ensure request went well.
-    #print(response.status_code)
+    print(response.status_code)
     #print(response.headers['Content-Type'])
     #print(type(response.json()))
 
-
+    count = 0
     for key, value in response.json().items():
         try:
             for data in list(value):
@@ -54,10 +56,16 @@ def main():
                 trad = data['traditionalMessage']
                 if icao == ' ':
                     print(trad, '\n')
+                    count += 1
                 else:
                     print(icao, '\n')
+                    count += 1
         except:
             pass
+
+        if count == 0:
+            print('Empty!')
+            break
 
 
 
