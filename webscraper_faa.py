@@ -48,6 +48,7 @@ Wrong Airport Landings
     #print(response.headers['Content-Type'])
     #print(type(response.json()))
 
+    # Count to check if we got any notams in the request. Might need to change its place
     count = 0
     for key, value in response.json().items():
         try:
