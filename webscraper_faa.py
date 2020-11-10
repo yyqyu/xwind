@@ -8,19 +8,12 @@ import re
 # Web scraper for FAA notams from https://notams.aim.faa.gov/notamSearch/
 
 
-def main():
-
-    # Ask user for airport
-    # !!!! Make multiple requests at the same time with offsets of 0 to whatever, if nothing comesback stop, then aggregate result.
-    airport = get_string("Airport: ")
-    offset = "150"
+def request(offset, airport):
 
     param = {"searchType": '0',
              "designatorsForLocation": airport,
              "latMinutes": "0",
-             "latSeconds": "0"
-Wrong Airport Landings 
-,
+             "latSeconds": "0",
              "longMinutes": "0",
              "longSeconds": "0",
              "radius": "10",
@@ -39,35 +32,47 @@ Wrong Airport Landings
              "notamsOnly": "false",
              }
 
-    #response = requests.get("https://notams.aim.faa.gov/notamSearch")
-    response = requests.post("https://notams.aim.faa.gov/notamSearch/search",
-                             data=param)
 
-    # Print to terminal some info to ensure request went well.
+    response = requests.post("https://notams.aim.faa.gov/notamSearch/search",
+                                data=param)
     print(response.status_code)
+    return response
+
+def query_faa(airport):
+    
     #print(response.headers['Content-Type'])
     #print(type(response.json()))
+    empty = False
+    offset = 0
+    notams = ["FAA"]
+    while empty == False:
+        response = request(offset, airport)
+        offset += 30
 
     # Count to check if we got any notams in the request. Might need to change its place
-    count = 0
-    for key, value in response.json().items():
-        try:
-            for data in list(value):
-                icao = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
-                trad = data['traditionalMessage']
-                if icao == ' ':
-                    print(trad, '\n')
-                    count += 1
-                else:
-                    print(icao, '\n')
-                    count += 1
-        except:
-            pass
+        count = 0
+        for key, value in response.json().items():
+            try:
+                for data in list(value):
+                    # print(data)
+                    icao = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
+                    trad = data['traditionalMessage']
+                    if icao == ' ' and data['featureName'] != "LTA" and data['notamNumber'] != "N/A":
+                        # print(trad, '\n')
+                        notams.append(trad)
+                        count += 1
+                    elif data['featureName'] != "LTA":
+                        notams.append(icao)
+                        # print(icao, '\n')
+                        count += 1
+            except:
+                pass
 
-        if count == 0:
-            print('Empty!')
-            break
-
+            if count == 0:
+                empty = True
+                break
+    return notams
+    
 
 
     #to_write = jsbeautifier.beautify(response.text)
@@ -77,6 +82,9 @@ Wrong Airport Landings
     #with open(filename, "w") as file:
     #    file.write(to_write)
 
+def main():
+    notams = query_faa('jfk')
+    print(notams)
 
 if __name__ == "__main__":
     main()

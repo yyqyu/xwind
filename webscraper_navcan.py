@@ -22,7 +22,7 @@ def navcanada(ident):
         params={'point': f'{coord1},{coord2},{airport},site', 'alpha': 'notam'}
         )
 
-    notams_list = []
+    notams_list = ["CANADA"]
     # Iterate over result from 'notams', by skipping the first element
     # print(list(notams.json().items())[0:1])
     for key, value in list(notams.json().items())[1:]:

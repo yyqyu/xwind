@@ -81,14 +81,28 @@
             name = data[0][1];
             airportname.innerHTML = name;
 
-            for (var i = 0; i < notams_qty - 1 + 1; i++) {
-                newdiv = document.createElement('div');
-                divIdName = 'notam'+i;
-                newdiv.setAttribute('id', divIdName);
-                newdiv.setAttribute('class', 'notam');
-                newdiv.innerHTML = data[0][0][i][0] + ")";
-                document.getElementById('notam_container').appendChild(newdiv);            
+            if (data[0][0][0] = "FAA") {
+                for (var i = 1; i < notams_qty - 1 + 1; i++) {
+                    newdiv = document.createElement('div');
+                    divIdName = 'notam'+i;
+                    newdiv.setAttribute('id', divIdName);
+                    newdiv.setAttribute('class', 'notam');
+                    newdiv.innerHTML = data[0][0][i];
+                    document.getElementById('notam_container').appendChild(newdiv);            
+                }
             }
+            else if (data[0][0][0] == "Canada") {
+                for (var i = 1; i < notams_qty - 1 + 1; i++) {
+                    newdiv = document.createElement('div');
+                    divIdName = 'notam'+i;
+                    newdiv.setAttribute('id', divIdName);
+                    newdiv.setAttribute('class', 'notam');
+                    newdiv.innerHTML = data[0][0][i][0] + ")";
+                    document.getElementById('notam_container').appendChild(newdiv);            
+                }
+            }
+
+
 
             // Add airport name and ICAO code
             // document.getElementById("airportname").innerHTML = (data[0][2] + " - " + data[0][3]);

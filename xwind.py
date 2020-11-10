@@ -9,6 +9,7 @@ from flask import redirect, session, request
 from functools import wraps
 from itertools import islice
 from webscraper_navcan import navcanada
+from webscraper_faa import query_faa
 
 
 # Configure CS50 Library to use SQLite database
@@ -406,7 +407,7 @@ def get_notams(ident):
     if ident[0] == "C" and len(ident) <= 4 :
         return navcanada(ident)
     else:
-        return ""
+        return query_faa(ident)
 
 
 
