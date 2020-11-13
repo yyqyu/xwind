@@ -41,6 +41,8 @@ talisman = Talisman(
             SELF,
             'fonts.googleapis.com',
             'fonts.gstatic.com',
+            'https://www.googletagmanager.com/',
+            'www.google-analytics.com',
         ],
         'img-src': [
             '*',
@@ -49,12 +51,12 @@ talisman = Talisman(
             'data:',
             'https:;',
             'www.google-analytics.com',
-            'www.googletagmanager.com',
+            'https://www.googletagmanager.com/',
         ],
         'script-src': [
             SELF,
             'www.google-analytics.com',
-            'www.googletagmanager.com',
+            'https://www.googletagmanager.com/,
         ],
         'style-src': [
             SELF,
