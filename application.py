@@ -48,6 +48,7 @@ talisman = Talisman(
             'www.w3.org',
             'data:',
             'https:;',
+            'www.google-analytics.com',
         ],
         'script-src': [
             SELF,
