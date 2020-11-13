@@ -52,17 +52,20 @@ talisman = Talisman(
             'https:;',
             '*.google-analytics.com',
             '*.googletagmanager.com',
+            '*.gstatic.com',
         ],
         'script-src': [
             SELF,
             '*.google-analytics.com',
             '*.googletagmanager.com',
-            'unsafe-inline' https://www.googletagmanager.com,
+            'unsafe-inline',
+            'unsafe-eval',
         ],
         'style-src': [
             SELF,
             'fonts.googleapis.com',
             'fonts.gstatic.com',
+            '*.tagmanager.google.com',
 
         ],
     },
