@@ -57,6 +57,7 @@ talisman = Talisman(
             SELF,
             '*.google-analytics.com',
             '*.googletagmanager.com',
+            'unsafe-inline' https://www.googletagmanager.com,
         ],
         'style-src': [
             SELF,
@@ -65,6 +66,7 @@ talisman = Talisman(
 
         ],
     },
+    content_security_policy_nonce_in=['script-src'],
     feature_policy={
         'geolocation': '\'none\'',
     }
