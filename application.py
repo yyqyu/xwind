@@ -56,7 +56,7 @@ talisman = Talisman(
         'script-src': [
             SELF,
             'www.google-analytics.com',
-            'https://www.googletagmanager.com/,
+            'https://www.googletagmanager.com/',
         ],
         'style-src': [
             SELF,
