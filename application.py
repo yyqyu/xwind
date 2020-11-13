@@ -43,6 +43,7 @@ talisman = Talisman(
             'fonts.gstatic.com',
             '*.googletagmanager.com',
             '*.google-analytics.com',
+            '*.tagmanager.google.com',
         ],
         'img-src': [
             '*',
@@ -53,11 +54,13 @@ talisman = Talisman(
             '*.google-analytics.com',
             '*.googletagmanager.com',
             '*.gstatic.com',
+            '*.tagmanager.google.com',
         ],
         'script-src': [
             SELF,
             '*.google-analytics.com',
             '*.googletagmanager.com',
+            '*.tagmanager.google.com',
             'unsafe-inline',
             'unsafe-eval',
         ],
@@ -69,7 +72,6 @@ talisman = Talisman(
 
         ],
     },
-    content_security_policy_nonce_in=['script-src'],
     feature_policy={
         'geolocation': '\'none\'',
     }
