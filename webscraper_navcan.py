@@ -19,7 +19,7 @@ def navcanada(ident):
 
     notams = requests.get(
         f"https://plan.navcanada.ca/weather/api/alpha/?",
-        params={'point': f'{coord1},{coord2},{airport},site', 'alpha': 'notam'}
+        params={'point': f'{airport}|site|{coord1},{coord2}', 'alpha': 'notam', 'notam_choice': 'english'}
         )
 
     notams_list = ["CANADA"]
