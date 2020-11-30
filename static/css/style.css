@@ -238,5 +238,27 @@ mark {
 
 .notam{
     padding: 12px 0 12px 15px;
+    position: relative;
+    top: 1px;
+    transition: all ease 0.3s;
 }
 
+.clipboard {
+    width: 2em;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all ease 0.3s;
+}
+
+.notam:hover .clipboard  {
+    visibility: visible;
+    opacity: 1;
+    transition: all ease 0.3s;
+}
+
+.notam:hover {
+    cursor: pointer;
+}

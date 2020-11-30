@@ -44,10 +44,11 @@ def query_faa(airport):
     #print(type(response.json()))
     empty = False
     offset = 0
-    notams = ["FAA"]
+    notams = ["FAA2"]
     while empty == False:
         response = request(offset, airport)
         offset += 30
+        print(response.json().items())
 
     # Count to check if we got any notams in the request. Might need to change its place
         count = 0

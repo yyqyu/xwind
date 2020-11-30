@@ -70,6 +70,16 @@
 
         });
 
+        const copyToClipBoard = (str) =>
+        {
+            const el = document.createElement('textarea');
+            el.value = str;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        };
+        
 
 
         // Put data received from ajax call onto HTML page
@@ -77,11 +87,12 @@
             console.log(data[0][0].length);
             console.log(data[0][1]);
             notams_qty = data[0][0].length;
-
+            test = data[0][0][2][0].replace(/\\n/g, "<br />");
+            console.log(test);
             name = data[0][1];
             airportname.innerHTML = name;
 
-            if (data[0][0][0] = "FAA") {
+            if (data[0][0][0] == "FAA") {
                 for (var i = 1; i < notams_qty - 1 + 1; i++) {
                     newdiv = document.createElement('div');
                     divIdName = 'notam'+i;
@@ -91,16 +102,46 @@
                     document.getElementById('notam_container').appendChild(newdiv);            
                 }
             }
-            else if (data[0][0][0] == "Canada") {
+            else if (data[0][0][0] == "CANADA") {
                 for (var i = 1; i < notams_qty - 1 + 1; i++) {
                     newdiv = document.createElement('div');
                     divIdName = 'notam'+i;
                     newdiv.setAttribute('id', divIdName);
                     newdiv.setAttribute('class', 'notam');
-                    newdiv.innerHTML = data[0][0][i][0] + ")";
-                    document.getElementById('notam_container').appendChild(newdiv);            
+                    notam_string = data[0][0][i][0];
+                    notam_string = notam_string.replace(/\\n/g, "<br />");
+
+                    if (notam_string.includes("NOTAMJ") == false) {
+                        notam_string = notam_string.substring(11, notam_string.length);
+                    }
+
+                    if (notam_string.includes("FR:") == true) {
+                        distance = notam_string.search("FR:");
+                        notam_string = notam_string.substring(0, distance-2);
+                    }
+
+                    newdiv.innerHTML = notam_string + ")";
+                    document.getElementById('notam_container').appendChild(newdiv);
+                    clipboard = document.createElement("img");
+                    clipboard.src = '../static/media/clipboard.svg';
+                    clipboard.setAttribute('class', 'clipboard');
+                    console.log(clipboard);
+                    document.getElementById(divIdName).appendChild(clipboard);
                 }
             }
+
+
+            [...document.querySelectorAll('.notam')].forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var str = item.innerHTML;
+                    var regex = /<br\s*[\/]?>/gi;
+                    str = str.replace(regex, "\n");
+                    imgcount = str.search("<img");
+                    str = str.substring(0, imgcount-1);
+                    copyToClipBoard(str);
+                });
+               });
+
 
 
 

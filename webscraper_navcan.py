@@ -22,6 +22,8 @@ def navcanada(ident):
         params={'point': f'{airport}|site|{coord1},{coord2}', 'alpha': 'notam', 'notam_choice': 'english'}
         )
 
+    print(notams.json())
+
     notams_list = ["CANADA"]
     # Iterate over result from 'notams', by skipping the first element
     # print(list(notams.json().items())[0:1])
