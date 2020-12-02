@@ -62,7 +62,7 @@ talisman = Talisman(
             'www.google-analytics.com',
             'www.googletagmanager.com',
             'www.tagmanager.google.com',
-            'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='
+            '\'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='\'
         ],
         'style-src': [
             SELF,
