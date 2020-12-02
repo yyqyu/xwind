@@ -45,7 +45,7 @@ talisman = Talisman(
             'www.googletagmanager.com',
             'www.gstatic.com',
             'www.tagmanager.google.com',
-            'https://stats.g.doubleclick.net'
+            'https://stats.g.doubleclick.net',
             'https://www.google.com',
             'www.w3.org',
             'data:',
