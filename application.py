@@ -68,8 +68,17 @@ talisman = Talisman(
             SELF,
             'fonts.googleapis.com',
             'fonts.gstatic.com',
+            '*.google-analytics.com',
+            '*.googletagmanager.com',
+            '*.gstatic.com',
             '*.tagmanager.google.com',
-
+        ],
+        'connect-src' : [
+            SELF,
+            '*.google-analytics.com',
+            '*.googletagmanager.com',
+            '*.gstatic.com',
+            '*.tagmanager.google.com',
         ],
     },
     feature_policy={
