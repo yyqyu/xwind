@@ -71,7 +71,9 @@ talisman = Talisman(
             GTAGMANAGER,
             GTAGMANAGER2,
             GTAGMANAGER3,
-            GTAGMANAGER4
+            GTAGMANAGER4,
+            GTAGMANAGER5,
+            GTAGMANAGER6
         ],
         'style-src': [
             SELF,
