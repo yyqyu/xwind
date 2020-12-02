@@ -34,6 +34,7 @@ Session(app)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 SELF = "'self'"
+GTAGMANAGER = "'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='"
 talisman = Talisman(
     app,
     content_security_policy={
@@ -62,7 +63,7 @@ talisman = Talisman(
             'www.google-analytics.com',
             'www.googletagmanager.com',
             'www.tagmanager.google.com',
-            '\'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='\'
+            GTAGMANAGER
         ],
         'style-src': [
             SELF,
