@@ -67,6 +67,7 @@ talisman = Talisman(
             SELF,
             'www.google-analytics.com',
             'www.googletagmanager.com',
+            'https://www.googletagmanager.com'
             'www.tagmanager.google.com',
             GTAGMANAGER,
             GTAGMANAGER2,
