@@ -66,7 +66,10 @@ talisman = Talisman(
             'www.google-analytics.com',
             'www.googletagmanager.com',
             'www.tagmanager.google.com',
-            GTAGMANAGER
+            GTAGMANAGER,
+            GTAGMANAGER2,
+            GTAGMANAGER3,
+            GTAGMANAGER4
         ],
         'style-src': [
             SELF,
