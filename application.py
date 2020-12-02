@@ -45,12 +45,35 @@ talisman = Talisman(
             'www.googletagmanager.com',
             'www.gstatic.com',
             'www.tagmanager.google.com',
-            'https://stats.g.doubleclick.net',
-            'https://www.google.com',
+            'www.google.com'
+        ],
+        'img-src': [
+            '*',
+            SELF,
             'www.w3.org',
             'data:',
-            'https:;'
-        ]
+            'https:;',
+            '*.google-analytics.com',
+            '*.googletagmanager.com',
+            '*.gstatic.com',
+            '*.tagmanager.google.com',
+        ],
+        'script-src': [
+            SELF,
+            'www.google-analytics.com',
+            'www.googletagmanager.com',
+            'www.tagmanager.google.com',
+            'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='
+        ],
+        'style-src': [
+            SELF,
+            'fonts.googleapis.com',
+            'fonts.gstatic.com',
+            '*.google-analytics.com',
+            '*.googletagmanager.com',
+            '*.gstatic.com',
+            '*.tagmanager.google.com',
+        ],
     },
     feature_policy={
         'geolocation': '\'none\'',
