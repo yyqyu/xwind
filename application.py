@@ -40,7 +40,7 @@ GTAGMANAGER3 = "'sha256-EwX6EbcqoJqFzIbppZekjClvKwP8U0E9IUxfsybqio8='"
 GTAGMANAGER4 = "'sha256-R3UqpDkOGnMCgjXw5VM0z21i805qX+o1v9rgbh3bT9Y='"
 GTAGMANAGER5 = "'sha256-B9g90kmK6XzS6C6YVf3mQz5sVeq9LfaG58xRtZsAxwE='"
 GTAGMANAGER6 = "'sha256-m2Uf5+C6AFmeaoE3JkBsgRn24KJr061woOcBO3euBUo='"
-GTAGMANAGER7 + "'sha256-+jYVjw0U5Xd2JcP9SuuFwcr6PJOO3kT8RwcsYYGx3As='"
+GTAGMANAGER7 = "'sha256-+jYVjw0U5Xd2JcP9SuuFwcr6PJOO3kT8RwcsYYGx3As='"
 talisman = Talisman(
     app,
     content_security_policy={
