@@ -35,6 +35,9 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 SELF = "'self'"
 GTAGMANAGER = "'sha256-ErR+R8sM6wQvFwJmgmEtNI0yU8A/FujBL312gxpYPxw='"
+GTAGMANAGER2 = "'sha256-4CsM37pCrcAxFW4ege3IDUx4QzrVh/ldzA9ZDByNRVk='"
+GTAGMANAGER3 = "'sha256-EwX6EbcqoJqFzIbppZekjClvKwP8U0E9IUxfsybqio8='"
+GTAGMANAGER4 = "'sha256-R3UqpDkOGnMCgjXw5VM0z21i805qX+o1v9rgbh3bT9Y='"
 talisman = Talisman(
     app,
     content_security_policy={
