@@ -70,6 +70,7 @@
 
         });
 
+        // Copy function
         const copyToClipBoard = (str) =>
         {
             const el = document.createElement('textarea');
@@ -79,15 +80,32 @@
             document.execCommand('copy');
             document.body.removeChild(el);
         };
-        
+
+        // Copy to clipboard function for notams
+        function copyNotam (tooltipNumber, divName) {
+              div = document.getElementById(divName);
+              if (div) {
+                div.addEventListener('click', function() {
+                var notamToCopy = document.getElementById(divName).innerHTML;
+                var regex = /<br\s*[\/]?>/gi;
+                notamToCopy = notamToCopy.replace(regex, "\n");
+                imgcount = notamToCopy.search("<img");
+                notamToCopy = notamToCopy.substring(0, imgcount-1);
+                copyToClipBoard(notamToCopy);
+                document.getElementById(tooltipNumber).style.display = "inline";
+                setTimeout( function() {
+                  document.getElementById(tooltipNumber).style.display = "none";
+                  }, 1000);
+                });
+              }
+            }
 
 
         // Put data received from ajax call onto HTML page
         function iterate(data){
-            console.log(data[0][0].length);
-            console.log(data[0][1]);
+
             notams_qty = data[0][0].length;
-            test = data[0][0][2][0].replace(/\\n/g, "<br />");
+            test = data[0][0][0];
             console.log(test);
             name = data[0][1];
             airportname.innerHTML = name;
@@ -98,8 +116,22 @@
                     divIdName = 'notam'+i;
                     newdiv.setAttribute('id', divIdName);
                     newdiv.setAttribute('class', 'notam');
-                    newdiv.innerHTML = data[0][0][i];
-                    document.getElementById('notam_container').appendChild(newdiv);            
+                    notam_string = data[0][0][i];
+                    newdiv.innerHTML = notam_string;
+                    if (notam_string != " ") {
+                      document.getElementById('notam_container').appendChild(newdiv);
+                      clipboard = document.createElement("img");
+                      clipboard.src = '../static/media/clipboard.svg';
+                      clipboard.setAttribute('class', 'clipboard');
+                      document.getElementById(divIdName).appendChild(clipboard);
+                      tooltipIdNumber = "tooltip-" + i;
+                      tooltip = document.createElement('span');
+                      tooltip.setAttribute('id', tooltipIdNumber);
+                      tooltip.setAttribute('class', 'custom-tooltip');
+                      tooltip.innerHTML = "Notam copied to clipboard";
+                      document.getElementById(divIdName).appendChild(tooltip);
+                      copyNotam(tooltipIdNumber, divIdName);
+                    }
                 }
             }
             else if (data[0][0][0] == "CANADA") {
@@ -125,22 +157,20 @@
                     clipboard = document.createElement("img");
                     clipboard.src = '../static/media/clipboard.svg';
                     clipboard.setAttribute('class', 'clipboard');
-                    console.log(clipboard);
                     document.getElementById(divIdName).appendChild(clipboard);
+                    tooltipIdNumber = "tooltip-" + i;
+                    tooltip = document.createElement('span');
+                    tooltip.setAttribute('id', tooltipIdNumber);
+                    tooltip.setAttribute('class', 'custom-tooltip');
+                    tooltip.innerHTML = "Notam copied to clipboard";
+                    document.getElementById(divIdName).appendChild(tooltip);
+                    copyNotam(tooltipIdNumber, divIdName);
+
                 }
             }
 
 
-            [...document.querySelectorAll('.notam')].forEach(function(item) {
-                item.addEventListener('click', function() {
-                    var str = item.innerHTML;
-                    var regex = /<br\s*[\/]?>/gi;
-                    str = str.replace(regex, "\n");
-                    imgcount = str.search("<img");
-                    str = str.substring(0, imgcount-1);
-                    copyToClipBoard(str);
-                });
-               });
+
 
 
 
@@ -167,7 +197,7 @@
                 document.getElementById('airportname').scrollIntoView();
             }
         }
-            
+
     })
 
     // Wait for page to finish loading
@@ -234,5 +264,3 @@
 
 
     });
-
-

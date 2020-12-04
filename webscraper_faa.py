@@ -39,12 +39,12 @@ def request(offset, airport):
     return response
 
 def query_faa(airport):
-    
+
     #print(response.headers['Content-Type'])
     #print(type(response.json()))
     empty = False
     offset = 0
-    notams = ["FAA2"]
+    notams = ["FAA"]
     while empty == False:
         response = request(offset, airport)
         offset += 30
@@ -73,7 +73,7 @@ def query_faa(airport):
                 empty = True
                 break
     return notams
-    
+
 
 
     #to_write = jsbeautifier.beautify(response.text)
