@@ -162,7 +162,7 @@
                     tooltip = document.createElement('span');
                     tooltip.setAttribute('id', tooltipIdNumber);
                     tooltip.setAttribute('class', 'custom-tooltip');
-                    tooltip.innerHTML = "Notam copied to clipboard";
+                    tooltip.innerHTML = "Notam copied to clipboard!";
                     document.getElementById(divIdName).appendChild(tooltip);
                     copyNotam(tooltipIdNumber, divIdName);
 
