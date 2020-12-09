@@ -35,36 +35,31 @@ def request(offset, airport):
 
     response = requests.post("https://notams.aim.faa.gov/notamSearch/search",
                                 data=param)
-    print(response.status_code)
     return response
 
 def query_faa(airport):
 
-    #print(response.headers['Content-Type'])
-    #print(type(response.json()))
     empty = False
     offset = 0
-    notams = ["FAA"]
+    notams = []
     while empty == False:
         response = request(offset, airport)
         offset += 30
-        print(response.json().items())
 
     # Count to check if we got any notams in the request. Might need to change its place
         count = 0
+        notams_list = []
         for key, value in response.json().items():
             try:
                 for data in list(value):
-                    # print(data)
                     icao = re.sub('(\\r\\n\\r\\n)','(\r\n)', data['icaoMessage'])
                     trad = data['traditionalMessage']
+                    ident = data['icaoId']
                     if icao == ' ' and data['featureName'] != "LTA" and data['notamNumber'] != "N/A":
-                        # print(trad, '\n')
-                        notams.append(trad)
+                        notams_list.append((trad, ident))
                         count += 1
                     elif data['featureName'] != "LTA":
-                        notams.append(icao)
-                        # print(icao, '\n')
+                        notams_list.append((icao, ident, "FAA"))
                         count += 1
             except:
                 pass
@@ -72,20 +67,11 @@ def query_faa(airport):
             if count == 0:
                 empty = True
                 break
+        notams.extend(notams_list)
     return notams
-
-
-
-    #to_write = jsbeautifier.beautify(response.text)
-
-    # Write all notams into a file in JSON format
-    #filename = (f"./test_scraper/response_{airport}.js")
-    #with open(filename, "w") as file:
-    #    file.write(to_write)
 
 def main():
     notams = query_faa('jfk')
-    print(notams)
 
 if __name__ == "__main__":
     main()

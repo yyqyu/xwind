@@ -31,31 +31,37 @@
     // });
 
     var data = [];
+    var count = 0;
     // Async call for all data on form submit
     $('#stationform').on("submit", function() {
         // Add loading animation
         document.getElementById("loading").classList.add("seen");
         document.getElementById("loading").classList.remove("remove");
-        // Hide divs where ajax data will be posted
+        // Hide divs where data from ajax call will be posted
         // Set variables back to zero
         data.length = 0;
+        count = 0;
         form_data = document.getElementById('station').value;
 
         // Erase these 2 divs when function is ran again
         document.getElementById("notam_container").remove();
-        document.getElementById("airport_name").remove();
+        document.querySelectorAll('.airportname').forEach(e => e.remove());
 
-        // Create a new div for airport name
-        airportname = document.createElement('div');
-        airportname.setAttribute('class', 'col-12 mt-4');
-        airportname.setAttribute('id', 'airport_name');
-        document.getElementById('content').appendChild(airportname);
+        // Function to write the appropriate airport name at the top of notams.
+        function writeAirportName(ident, airport) {
+            airportname = document.createElement('h4');
+            airportname.setAttribute('class', airportname);
+            airportname.setAttribute('id', 'airport-'+ ident);
+            document.getElementById('notam_container').append(airportname);
+            document.getElementById('airport-'+ ident).innerHTML = airport + " - (" + ident + ")";
+        }
 
         // Create a new div container for Notams
         newcontainer = document.createElement('div');
         newcontainer.setAttribute('class', 'col-12 mt-4');
         newcontainer.setAttribute('id', 'notam_container');
         document.getElementById('content').appendChild(newcontainer);
+        // Ajax call getting notams
         $.ajax({
                 type: "GET",
                 url: '/notams_app',
@@ -65,12 +71,11 @@
                 success: function(result) {
                     data.push(result);
                     iterate(data);
-                    console.log(data);
             }
 
         });
 
-        // Copy function
+        // Custom copy-to-clipboard function
         const copyToClipBoard = (str) =>
         {
             const el = document.createElement('textarea');
@@ -81,93 +86,179 @@
             document.body.removeChild(el);
         };
 
-        // Copy to clipboard function for notams
+        // Function used below to copy appropriate notam to clipboard
         function copyNotam (tooltipNumber, divName) {
-              div = document.getElementById(divName);
-              if (div) {
-                div.addEventListener('click', function() {
-                var notamToCopy = document.getElementById(divName).innerHTML;
-                var regex = /<br\s*[\/]?>/gi;
-                notamToCopy = notamToCopy.replace(regex, "\n");
-                imgcount = notamToCopy.search("<img");
-                notamToCopy = notamToCopy.substring(0, imgcount-1);
-                copyToClipBoard(notamToCopy);
-                document.getElementById(tooltipNumber).style.display = "inline";
-                setTimeout( function() {
-                  document.getElementById(tooltipNumber).style.display = "none";
-                  }, 1000);
-                });
-              }
+            div = document.getElementById(divName);
+                // Making sure there's no error otherwise function will stall
+                if (div) {
+                    // Add an on-click event listener on that div
+                    div.addEventListener('click', function() {
+                    var notamToCopy = document.getElementById(divName).innerHTML;
+                    var regex = /<br\s*[\/]?>/gi;
+                    // Replaced <br> that was added by a new line character for copy and pasting purposes
+                    notamToCopy = notamToCopy.replace(regex, "\n");
+                    // The code for the clipboard image will be present, so counting backwards from where
+                    // it is found.
+                    imgcount = notamToCopy.search("<img");
+                    notamToCopy = notamToCopy.substring(0, imgcount-1);
+                    copyToClipBoard(notamToCopy);
+                    document.getElementById(tooltipNumber).style.display = "inline";
+                    // Remove tooltip after a second
+                    setTimeout( function() {
+                        document.getElementById(tooltipNumber).style.display = "none";
+                        }, 1000);
+                    });
+                }
             }
 
+        function checkIfEmpty(notam) {
+            if (!notam) {
+                return true;
+            } else if (notam == " ") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function isNavCanada(notam) {
+            // Gotta iterate the 1 here.
+            if (notam == 2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function CanadianNotam(notam) {
+            notam = notam.replace(/\\n/g, "<br />")
+            if (notam.includes("NOTAMJ") == false) {
+                notam = notam.substring(11, notam.length-1);
+            }
+
+            // Remove French notams part.
+            if (notam.includes("FR:") == true) {
+                var distance = notam.search("FR:");
+                notam = notam.substring(0, distance-2);
+            }
+
+            // If error on NavCanada's part and there are still "english: null" or
+            // "french: null" in notam, remove it.
+            if (notam.includes("null") == true) {
+                var distance = notam.search("null");
+                notam = notam.substring(0, distance-16);
+            }
+            // notam = notam + ")";
+            return notam;
+        }
+
+        function FAANotam(notam) {
+            if ((notam != "") || (notam != " ")) {
+                return notam;
+            }
+        }
+
+        function writeFAANotam(notams_list) {
+            for (var i = 0; i < notams_list.length; i++) {
+                if ((notams_list != " ") || (notams_list != "")){
+                    createDiv(notams_list[i], count);
+                    count++;
+                }
+            }
+        }
+
+        function writeCanadianNotam(rsc, notams_list) {
+            createDiv(rsc, count);
+            count++;
+            for (var i = 0; i < notams_list.length; i++, count++) {
+                createDiv(notams_list[i], count);
+            }
+        }
+
+        function createDiv(notam, count) {
+            // Create div for displaying notam
+            var newdiv = document.createElement('div');
+            var divIdName = 'notam'+ count;
+            newdiv.setAttribute('id', divIdName);
+            newdiv.setAttribute('class', 'notam fira-font');
+            newdiv.innerHTML = notam;
+            // Append notam to the container
+            document.getElementById('notam_container').appendChild(newdiv);
+            // Create clipboard image indicating possible copy to clipboard
+            var clipboard = document.createElement("img");
+            clipboard.src = '../static/media/clipboard.svg';
+            clipboard.setAttribute('class', 'clipboard');
+            document.getElementById(divIdName).appendChild(clipboard);
+            // Create a tooltip to be appended to the right div
+            tooltipIdNumber = "tooltip-" + count;
+            var tooltip = document.createElement('span');
+            tooltip.setAttribute('id', tooltipIdNumber);
+            tooltip.setAttribute('class', 'custom-tooltip');
+            tooltip.innerHTML = "Notam copied to clipboard";
+            document.getElementById(divIdName).appendChild(tooltip);
+            // Call function to copy the notam to the clipboard
+            copyNotam(tooltipIdNumber, divIdName);
+            count++;
+        }
 
         // Put data received from ajax call onto HTML page
         function iterate(data){
 
-            notams_qty = data[0][0].length;
-            test = data[0][0][0];
-            console.log(test);
-            name = data[0][1];
-            airportname.innerHTML = name;
+            console.log(data);
 
-            if (data[0][0][0] == "FAA") {
-                for (var i = 1; i < notams_qty - 1 + 1; i++) {
-                    newdiv = document.createElement('div');
-                    divIdName = 'notam'+i;
-                    newdiv.setAttribute('id', divIdName);
-                    newdiv.setAttribute('class', 'notam');
-                    notam_string = data[0][0][i];
-                    newdiv.innerHTML = notam_string;
-                    if (notam_string != " ") {
-                      document.getElementById('notam_container').appendChild(newdiv);
-                      clipboard = document.createElement("img");
-                      clipboard.src = '../static/media/clipboard.svg';
-                      clipboard.setAttribute('class', 'clipboard');
-                      document.getElementById(divIdName).appendChild(clipboard);
-                      tooltipIdNumber = "tooltip-" + i;
-                      tooltip = document.createElement('span');
-                      tooltip.setAttribute('id', tooltipIdNumber);
-                      tooltip.setAttribute('class', 'custom-tooltip');
-                      tooltip.innerHTML = "Notam copied to clipboard";
-                      document.getElementById(divIdName).appendChild(tooltip);
-                      copyNotam(tooltipIdNumber, divIdName);
+            // How many notams to display total
+            var notams_qty = data[0][0].length
+            // console.log(notams_qty);
+
+            // How many stations entered by user
+            var stations_qty = data[0][2].length;
+            // console.log(stations_qty);
+
+            // List of stations entered by the user
+            var stations_list = data[0][2];
+            // console.log(stations_list);
+
+            // How many (complete) stations name have been passed through
+            var stations_list_names = data[0][1];
+            // console.log(stations_list_names);
+
+            // Total notam count
+            var k = 0;
+            for (var j = 0; j < stations_qty; j++) {
+                // Write airport name on page
+                writeAirportName(stations_list[j], stations_list_names[j]);
+                var notams_list_canada = [];
+                var notams_list_faa = [];
+                for (var i = 0; i < notams_qty; i++) {
+                    if (data[0][0][i][2] == "CANADA") {
+                        if (data[0][0][i][1].includes(stations_list[j])) {
+                            var canadian_notam = CanadianNotam(data[0][0][i][0]);
+                            notams_list_canada.push(canadian_notam);
+                            k++;
+                        }
+                    } else if (data[0][0][i][2] == "FAA"){
+                        if (data[0][0][i][1].includes(stations_list[j])){
+                            var faa_notam = FAANotam(data[0][0][i][0]);
+                            notams_list_faa.push(faa_notam);
+                            k++;
+                       }
                     }
                 }
-            }
-            else if (data[0][0][0] == "CANADA") {
-                for (var i = 1; i < notams_qty - 1 + 1; i++) {
-                    newdiv = document.createElement('div');
-                    divIdName = 'notam'+i;
-                    newdiv.setAttribute('id', divIdName);
-                    newdiv.setAttribute('class', 'notam');
-                    notam_string = data[0][0][i][0];
-                    notam_string = notam_string.replace(/\\n/g, "<br />");
+                // RSC is always the last one, separating it from the rest.
+                if (notams_list_canada != "") {
+                    var rsc = notams_list_canada.pop();
+                    writeCanadianNotam(rsc, notams_list_canada);
+                }
 
-                    if (notam_string.includes("NOTAMJ") == false) {
-                        notam_string = notam_string.substring(11, notam_string.length);
-                    }
-
-                    if (notam_string.includes("FR:") == true) {
-                        distance = notam_string.search("FR:");
-                        notam_string = notam_string.substring(0, distance-2);
-                    }
-
-                    newdiv.innerHTML = notam_string + ")";
-                    document.getElementById('notam_container').appendChild(newdiv);
-                    clipboard = document.createElement("img");
-                    clipboard.src = '../static/media/clipboard.svg';
-                    clipboard.setAttribute('class', 'clipboard');
-                    document.getElementById(divIdName).appendChild(clipboard);
-                    tooltipIdNumber = "tooltip-" + i;
-                    tooltip = document.createElement('span');
-                    tooltip.setAttribute('id', tooltipIdNumber);
-                    tooltip.setAttribute('class', 'custom-tooltip');
-                    tooltip.innerHTML = "Notam copied to clipboard!";
-                    document.getElementById(divIdName).appendChild(tooltip);
-                    copyNotam(tooltipIdNumber, divIdName);
-
+                if (notams_list_faa != "") {
+                    writeFAANotam(notams_list_faa.slice(1));
                 }
             }
+
+
+
+
+
 
 
 

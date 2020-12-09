@@ -13,18 +13,36 @@
         </button>
     </div>-->
 {% endif %}
-<div class="container">    
+<div class="container">
     <div class="row">
         <div class="col-12 mt-4">
             <form action="/notams" method="post" id="stationform">
-                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: YMX, JFK, EGLL, etc" id="station">
-                <div class="h6 sm-indication mt-1 ml-1">Request NOTAMs by entering a ICAO or IATA code. <br><em><strong>USA and International airports currently available for beta testing.</em></strong></div>
+                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: YMX JFK EGLL etc" id="station">
+                <div class="h6 sm-indication mt-1 ml-1">Request NOTAMs by entering a ICAO or IATA code separated by a <strong>space</strong>. <br><em>USA and International airports currently available for beta testing.</em></div>
             </form>
         </div>
+            <!--
+            <button class="btn btn-sm btn-secondary" type="button" data-toggle="collapse" data-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions">
+              Options
+            </button>
+            -->
     </div>
-    
+    <!--
+    <div class="collapse" id="collapseOptions">
+        <div class="card card-body">
+            <p>Insert options here</p>
+            <ul>
+                <li>Option 1</li>
+                <li>Option 2</li>
+                <li>Option 3</li>
+                <li>Option 4</li>
+            </ul>
+        </div>
+    </div>
+    -->
+
     <div class="row" id="content">
-    
+
             <!-- loading spinner, enabled and disabled by javascript-->
             <div class="mt-6 col-12 d-flex justify-content-center remove" id="loading">
                     <div class="spinner-grow text-primary" role="status">
@@ -32,10 +50,10 @@
                     </div>
             </div>
             <div class="col-12" id="airport_name">
-                
+
             </div>
             <div class="col-12" id="notam_container">
-                
+
             </div>
 
 <script src="../static/js/notams_script.js" type="application/javascript"></script>

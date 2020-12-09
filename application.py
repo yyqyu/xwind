@@ -137,14 +137,18 @@ def notams():
 
 @app.route("/notams_app", methods=["GET", "POST"])
 def notams_app():
-    station = request.args.get("form_data")
-    print(station)
-    ident = get_ident(station)
-    notams_list = get_notams(ident)
-    airport_name = get_name(ident)
-    code = get_code(ident)
-    #print(code)
-    return jsonify(notams_list, airport_name, code)
+    stations_string = request.args.get("form_data")
+    stations = stations_string.split()
+    airport_names = []
+    ident_list = []
+
+    for station in stations:
+        ident = get_ident(station)
+        # Will be in original order
+        ident_list.append(ident)
+        airport_names.append(get_name(ident))
+    notams_list = get_notams(ident_list)
+    return jsonify(notams_list, airport_names, ident_list)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -173,7 +177,7 @@ def register():
                 pw_hash = generate_password_hash(request.form.get("password"))
                 db.execute("INSERT INTO users (username, hash, permission_level) VALUES (:username, :pw_hash, '0')",
                            username=username, pw_hash=pw_hash)
-                
+
                 # Consider the user as being logged in after being registered
                 session["user_id"] = db.execute("SELECT id FROM users WHERE username = :username",
                                                 username=username)[0]["id"]

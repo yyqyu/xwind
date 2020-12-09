@@ -8,7 +8,7 @@ from cs50 import SQL
 from flask import redirect, session, request
 from functools import wraps
 from itertools import islice
-from webscraper_navcan import navcanada
+from webscraper_navcan import query_navcanada
 from webscraper_faa import query_faa
 
 
@@ -403,11 +403,33 @@ def headings(code):
     return headings_list
 
 
-def get_notams(ident):
-    if ident[0] == "C" and len(ident) <= 4 :
-        return navcanada(ident)
+def get_notams(ident_list):
+    navcanada_ident_list = []
+    faa_ident_list = []
+    navcanada_notams_list = []
+    faa_notams_list = []
+    for ident in ident_list:
+        if ident[0] == "C" and len(ident) <= 4 :
+            navcanada_ident_list.append(ident)
+        else:
+            faa_ident_list.append(ident)
+
+    if navcanada_ident_list:
+        navcanada_notams_list = query_navcanada(navcanada_ident_list)
+
+    if faa_ident_list:
+        faa_list = []
+        for elem in faa_ident_list:
+            faa_list = query_faa(elem)
+            faa_notams_list.extend(faa_list)
+
+    if navcanada_ident_list and faa_ident_list:
+        combined_notams = navcanada_notams_list + faa_notams_list
+        return combined_notams
+    elif navcanada_notams_list:
+        return navcanada_notams_list
     else:
-        return query_faa(ident)
+        return faa_notams_list
 
 
 

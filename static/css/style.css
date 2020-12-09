@@ -8,7 +8,7 @@
 html { scroll-behavior: smooth; }
 
 .asap-font {
-    font-family: 'Asap', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
 .fira-font {
@@ -231,16 +231,25 @@ mark {
     font-size:12px;
     white-space: pre-line;
 }
-
+/*
 .notam:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #E5E5E5;
 }
+*/
 
 .notam{
     padding: 12px 0 12px 15px;
     position: relative;
     top: 1px;
     transition: all ease 0.3s;
+    border-radius: 1.5em;
+    background-color: #F6F6F6;
+    margin-bottom: 0.55em;
+    font-size: 90%;
+}
+
+.notam:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.45);
 }
 
 .clipboard {
@@ -273,4 +282,34 @@ mark {
     position: absolute;
     top: 40px;
     right: 20px;
+    transition: all ease 0.3s;
+}
+
+h4:first-of-type {
+  margin-top: 0;
+}
+
+h4 {
+  background-color: #3e3e3e;
+  color: white;
+  display: inline-block;
+  padding: 0.35em;
+  border-radius: 0.3em;
+  font-size: 2em;
+  margin-top: 2em;
+}
+
+#collapseOptions {
+    margin-top: 10px;
+}
+
+button[data-target="#collapseOptions"] {
+    margin-left: 15px;
+}
+
+strong {
+    font-weight:900;
+}
+
+.badge {
 }
