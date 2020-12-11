@@ -7,6 +7,9 @@
 
 html { scroll-behavior: smooth; }
 
+#station {
+    border-radius: 1em;
+}
 .asap-font {
     font-family: 'Source Sans Pro', sans-serif;
 }
@@ -237,7 +240,7 @@ mark {
 }
 */
 
-.notam{
+.notam, .weather {
     padding: 12px 0 12px 15px;
     position: relative;
     top: 1px;

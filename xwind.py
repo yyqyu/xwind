@@ -2,14 +2,17 @@ import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
 
+import requests
+
 # import os
 
 from cs50 import SQL
 from flask import redirect, session, request
 from functools import wraps
-from itertools import islice
+import itertools
 from webscraper_navcan import query_navcanada
 from webscraper_faa import query_faa
+
 
 
 # Configure CS50 Library to use SQLite database
@@ -110,6 +113,51 @@ def last_metar_raw(ident):
             raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
 
     return raw_text
+
+def metar_raw(ident_list):
+    
+    requestor = ""
+    for x in range(len(ident_list)):
+        try:
+            ident_list[x+1]
+            requestor += ident_list[x]
+            requestor += " "
+        except Exception:
+            requestor += ident_list[x]
+    print(requestor)
+
+    url_response = urllib.request.urlopen(
+    "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+    "datasource=metars"                       # 'metars' or 'tafs'
+    "&requestType=retrieve"                 # -- don't touch --
+    "&format=xml"                           # -- don't touch --
+    "&mostRecent=false"                      # use if only want latest
+    "&hoursBeforeNow=3"                    # required even if latest
+    f"&stationString={requestor}")              # station ICAO code
+
+    root = ET.fromstring(url_response.read())
+    
+    print(root.find('data/METAR/raw_text').text)
+    print(len(root.findall('data/METAR')))
+
+    for metar in root.findall('data/METAR'):
+        print(metar.text)
+
+    if not (root.findall('data/METAR')):
+        raw_text = "No weather available"
+    else:
+        if root.find('data/METAR/station_id').text[:1] == "K":
+            if root.find('data/METAR/metar_type').text == "METAR":
+                raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
+            elif root.find('data/METAR/metar_type').text == "SPECI":
+                raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
+        elif root.find('data/METAR/raw_text').text[9:][:2] == "00":
+            raw_text = ("METAR " + root.find('data/METAR/raw_text').text)
+        else:
+            raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
+
+    return raw_text
+
 
 
 # Retrieve the raw text of last available TAF
