@@ -101,7 +101,10 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei')
+
+# db = SQL("sqlite:///xwind.db")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -123,7 +126,9 @@ def index_app():
     wx_times = weather_times(ident)
     wx_types = weather_types(ident)
     rwy_data = runways_data(code)
-    notams_list = get_notams(ident)
+    ident_list = []
+    ident_list.append(ident)
+    notams_list = get_notams(ident_list)
     return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data, notams_list)
 
 @app.route("/about", methods=["GET"])
@@ -281,4 +286,4 @@ for code in default_exceptions:
 if __name__ == '__main__':
     app.debug = True
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)
