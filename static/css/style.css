@@ -318,19 +318,30 @@ strong {
     margin-left: 0;
 }
 
+.row {
+    margin: 0 auto;
+}
 
-@media only screen and (max-width: 600px) {
+.form-control {
+    width: 85%;
+    display: inline-block;
+}
+
+
+@media only screen and (max-width: 780px) {
     #wx {
       margin-left:5vw;
       max-width: 80vw;
     }
-  }
 
-  .row {
-      margin: 0 auto;
-  }
+    #station {
+        width: 80%;
+    }
+ }
 
-  .form-control {
-      width: 85%;
-      display: inline-block;
-  }
+@media only screen and (max-width: 500px) {
+    #station {
+        width: 65%;
+    }
+
+}
