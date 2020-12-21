@@ -1,11 +1,8 @@
-@media only screen and (max-width: 600px) {
-    #wx {
-      margin-left:5vw;
-      max-width: 80vw;
-    }
-  }
-
 html { scroll-behavior: smooth; }
+
+* {
+    box-sizing: border-box;
+}
 
 #station {
     border-radius: 1em;
@@ -316,3 +313,24 @@ strong {
 
 .badge {
 }
+
+#send_ajax {
+    margin-left: 0;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #wx {
+      margin-left:5vw;
+      max-width: 80vw;
+    }
+  }
+
+  .row {
+      margin: 0 auto;
+  }
+
+  .form-control {
+      width: 85%;
+      display: inline-block;
+  }
