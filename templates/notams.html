@@ -2,6 +2,7 @@
 {% set active_page = "notams" %}
 
 {% block title %}
+: Notams
 {% endblock %}
 
 {% block main %}
@@ -15,17 +16,19 @@
 {% endif %}
 <div class="container">
     <div class="row">
-        <div class="col-12 mt-4">
-            <form action="/notams" method="post" id="stationform">
-                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: YMX JFK EGLL etc" id="station">
-                <div class="h6 sm-indication mt-1 ml-1">Request NOTAMs by entering a ICAO or IATA code separated by a <strong>space</strong>. <br><em>USA and International airports currently available for beta testing.</em></div>
-            </form>
+        <div class="col-10 mt-4">
+            <!-- works even while using /notams in index.html.. so this is not the reason...-->
+            <form method="post" id="stationform">
+                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL JFK EGLL" id="station">
+                
+                <label for="station" class="h6 sm-indication mt-1 ml-1">Request notam info by entering any number of ICAO or IATA codes. Separated by <strong>spaces</strong></label>
+    
+            
         </div>
-            <!--
-            <button class="btn btn-sm btn-secondary" type="button" data-toggle="collapse" data-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions">
-              Options
-            </button>
-            -->
+        <div class="col-2 mt-4">
+            <button type="submit" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
+        </form>
+        </div>
     </div>
     <!--
     <div class="collapse" id="collapseOptions">

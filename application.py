@@ -16,7 +16,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
                    weather_times, weather_types, get_ident, headings,
-                   runways_data, get_code, get_notams)
+                   runways_data, get_code, get_notams, metar_raw)
 
 # Configure application
 app = Flask(__name__)
@@ -101,7 +101,10 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei')
+
+# db = SQL("sqlite:///xwind.db")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -123,7 +126,9 @@ def index_app():
     wx_times = weather_times(ident)
     wx_types = weather_types(ident)
     rwy_data = runways_data(code)
-    notams_list = get_notams(ident)
+    ident_list = []
+    ident_list.append(ident)
+    notams_list = get_notams(ident_list)
     return jsonify(metar_text, taf_text, airport_name, ident, rwy_list, heading_list, wind_dir, wind_str, wx_times, wx_types, rwy_data, notams_list)
 
 @app.route("/about", methods=["GET"])
@@ -134,6 +139,10 @@ def about():
 @app.route("/notams", methods=["GET", "POST"])
 def notams():
     return render_template("notams.html")
+
+@app.route("/weather", methods=["GET", "POST"])
+def weather():
+    return render_template("weather.html")
 
 @app.route("/notams_app", methods=["GET", "POST"])
 def notams_app():
@@ -149,6 +158,21 @@ def notams_app():
         airport_names.append(get_name(ident))
     notams_list = get_notams(ident_list)
     return jsonify(notams_list, airport_names, ident_list)
+
+@app.route("/weather_app", methods=["GET", "POST"])
+def weather_app():
+    stations_string = request.args.get("form_data")
+    stations = stations_string.split()
+    airport_names = []
+    ident_list = []
+
+    for station in stations:
+        ident = get_ident(station)
+        # Will be in original order
+        ident_list.append(ident)
+        airport_names.append(get_name(ident))
+    weather_list = metar_raw(ident_list)
+    return jsonify(weather_list, airport_names, ident_list)
 
 
 @app.route("/register", methods=["GET", "POST"])

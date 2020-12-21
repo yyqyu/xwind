@@ -2,18 +2,27 @@ import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
 
+import requests
+
+from urllib.error import HTTPError, URLError
+import socket
+import logging
+
 # import os
 
 from cs50 import SQL
 from flask import redirect, session, request
 from functools import wraps
-from itertools import islice
+import itertools
 from webscraper_navcan import query_navcanada
 from webscraper_faa import query_faa
 
 
+
 # Configure CS50 Library to use SQLite database
-db = SQL("postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei")
+db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei')
+
+# db = SQL("sqlite:///xwind.db")
 
 # Get ident code
 def get_ident(station):
@@ -108,6 +117,111 @@ def last_metar_raw(ident):
             raw_text = ("SPECI " + root.find('data/METAR/raw_text').text)
 
     return raw_text
+
+def metar_raw(ident_list):
+    
+    requestor = ""
+    metar_list = []
+    taf_list = []
+    formatted_taf_list = []
+    no_metar_available = []
+    no_taf_available = []
+    metar_url = ""
+    taf_url = ""
+
+    for ident in range(len(ident_list)):
+        if "-" in ident_list[ident]:
+            ident_list[ident] = ident_list[ident].replace('-', '')
+
+    for x in range(len(ident_list)):
+        try:
+            ident_list[x+1]
+            requestor += ident_list[x]
+            requestor += "%20"
+        except Exception:
+            requestor += ident_list[x]
+    print(requestor)
+
+    metar_url = (
+                "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+                "datasource=metars"
+                "&requestType=retrieve"
+                "&format=xml"
+                "&mostRecent=false"
+                "&hoursBeforeNow=3"
+                f"&stationString={requestor}")
+
+    taf_url = (
+        "https://www.aviationweather.gov/adds/dataserver_current/httpparam?"
+        "datasource=tafs"
+        "&requestType=retrieve"
+        "&format=xml"
+        "&mostRecentforEachStation=true"
+        "&hoursBeforeNow=14"
+        f"&stationString={requestor}")
+
+    try:
+        url_response_metar = urllib.request.urlopen(metar_url, timeout=10)
+    except HTTPError as error:
+            logging.error('Data not retrieved because %s\nURL: %s', error, metar_url)
+    except URLError as error:
+        if isinstance(error.reason, socket.timeout):
+            logging.error('socket timed out - URL %s', metar_url)
+        else:
+            logging.error('some other error happened')
+    else:
+        logging.info('Access successful.')
+
+    try:
+        url_response_taf = urllib.request.urlopen(taf_url, timeout=10)
+    except HTTPError as error:
+        logging.error('Data not retrieved because %s\nURL: %s', error, taf_url)
+    except URLError as error:
+        if isinstance(error.reason, socket.timeout):
+            logging.error('socket timed out - URL %s', taf_url)
+        else:
+            logging.error('some other error happened')
+    else:
+        logging.info('Access successful.')
+    
+    root_metar = ET.fromstring(url_response_metar.read())
+    root_taf = ET.fromstring(url_response_taf.read())
+    metars = root_metar.findall('data/METAR')
+    tafs = root_taf.findall('data/TAF')
+    '''
+    print(root.find('data/METAR/raw_text').text) ## WORKS
+    print(len(root.findall('data/METAR'))) ## PRINTS NUMBER OF METARS
+    '''
+
+    for ident in ident_list:
+        for metar in metars:
+            if not metar.find('station_id').text == ident:
+                no_metar_available = ("No METAR available for this station", ident)
+                if no_metar_available not in metar_list:
+                    metar_list.append(no_metar_available)
+            if metar.find('station_id').text == ident:
+                if metar.find('station_id').text[:1] == "K":
+                    if metar.find('metar_type').text == "METAR":
+                        metar_list.append(("METAR " + metar.find('raw_text').text, ident))
+                    elif metar.find('metar_type').text == "SPECI":
+                        metar_list.append(("SPECI " + metar.find('raw_text').text, ident))
+                elif metar.find('raw_text').text[9:][:2] == "00":
+                    metar_list.append(("METAR " + metar.find('raw_text').text, ident))
+                else:
+                    metar_list.append(("SPECI " + metar.find('raw_text').text, ident))
+                #print(metar.find('raw_text').text)
+                #print(metar.find('station_id').text)
+        for taf in tafs:
+            if taf.find('station_id').text == ident:
+                taf_list.append((taf.find('raw_text').text, ident))
+                break
+        else:
+            no_taf_available = ("No TAF available for this station", ident)
+            if no_taf_available not in taf_list:
+                taf_list.append(no_taf_available)
+
+    return metar_list, taf_list
+
 
 
 # Retrieve the raw text of last available TAF

@@ -1,12 +1,12 @@
-@media only screen and (max-width: 600px) {
-    #wx {
-      margin-left:5vw;
-      max-width: 80vw;
-    }
-  }
-
 html { scroll-behavior: smooth; }
 
+* {
+    box-sizing: border-box;
+}
+
+#station {
+    border-radius: 1em;
+}
 .asap-font {
     font-family: 'Source Sans Pro', sans-serif;
 }
@@ -237,7 +237,7 @@ mark {
 }
 */
 
-.notam{
+.notam, .weather {
     padding: 12px 0 12px 15px;
     position: relative;
     top: 1px;
@@ -313,3 +313,24 @@ strong {
 
 .badge {
 }
+
+#send_ajax {
+    margin-left: 0;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #wx {
+      margin-left:5vw;
+      max-width: 80vw;
+    }
+  }
+
+  .row {
+      margin: 0 auto;
+  }
+
+  .form-control {
+      width: 85%;
+      display: inline-block;
+  }

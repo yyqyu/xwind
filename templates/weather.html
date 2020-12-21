@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% set active_page = "weather" %}
+
+{% block title %}
+: Weather
+{% endblock %}
+
+{% block main %}
+{% if not session.user_id %}
+<!--<div class="alert alert-warning alert-dismissible fade show centered" role="alert">
+        <span><strong>Warning!</strong> Still in beta stage. Use at your own risk.</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>-->
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-4">
+            <form method="post" id="stationform">
+                <input class="form-control" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL JFK EGLL" id="station"><button type="submit" id="send_ajax" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
+                <label for="station" class="h6 sm-indication mt-1 ml-1">Request weather info by entering any number of ICAO or IATA codes. Separated by <strong>spaces</strong></label>
+                </form>
+            
+        </div>
+
+    </div>
+
+    <div class="row" id="content">
+
+            <!-- loading spinner, enabled and disabled by javascript-->
+            <div class="mt-6 col-12 d-flex justify-content-center remove" id="loading">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+            </div>
+            <div class="col-12" id="airport_name">
+
+            </div>
+            <div class="col-12" id="notam_container">
+
+            </div>
+    </div>
+</div>
+<script src="../static/js/weather_script.js" type="application/javascript"></script>
+
+{% endblock %}

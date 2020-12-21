@@ -34,7 +34,7 @@
         <script src="../static/js/popper.min.js" type="application/javascript"></script>
         <script src="../static/js/bootstrap.min.js" type="application/javascript"></script>
 
-        <title>Xwind{% block title %}{% endblock %}</title>
+        <title>XWIND{% block title %}{% endblock %}</title>
 
         <meta name="description" content="Xwind is there to help make your operation smarter. Xwind is a free online weather and NOTAMs provider.
         Crosswind calculation,weather highlighting,  CRFI limitations, and NOTAMs filtering and ranking are there to help you operate smarter and safer."/>
@@ -63,8 +63,8 @@
                         <li class="nav-item {{ 'active' if active_page == 'about' else '' }} btn btn-sm btn-light mr-3">
                             <a class="nav-link" href="/about">About</a>
                         </li>
-                        <li class="nav-item {{ 'active' if active_page == 'weather' else '' }} btn btn-sm btn-light mr-3 disabled" data-toggle="tooltip" data-placement="bottom" title="Coming soon">
-                            <a class="nav-link " href="#" ="true">Weather</a>
+                        <li class="nav-item {{ 'active' if active_page == 'weather' else '' }} btn btn-sm btn-light mr-3" data-toggle="tooltip" data-placement="bottom">
+                            <a class="nav-link " href="/weather">Weather<span class="badge bg-secondary text-light"> New</span></a>
                         </li>
                         <li class="nav-item {{ 'active' if active_page == 'notams' else '' }} btn btn-sm btn-light mr-3">
                             <a class="nav-link " href="/notams">Notams <span class="badge bg-secondary text-light"> New</span></a>
