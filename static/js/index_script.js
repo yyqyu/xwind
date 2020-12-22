@@ -45,6 +45,10 @@
         document.getElementById("previous").classList.remove("seen");
         document.getElementById("next").classList.add("hidden");
         document.getElementById("next").classList.remove("seen");
+        document.getElementById("intro").classList.add("remove");
+        document.getElementById("intro").classList.remove("seen");
+        document.getElementById("app").classList.add("seen");
+        document.getElementById("app").classList.remove("remove");
         wxtypeandtime.classList.add("hidden");
         wxtypeandtime.classList.remove("seen");
         $("#rwy_table").empty();
@@ -240,8 +244,8 @@
                 $('#wx_type').html(data[0][9][counter4]);
                 }
             });
-            
-            
+
+
 
             // Get a list of headings in SAME ORDER as runway_list
             let headings_list = [];
@@ -353,7 +357,7 @@
             if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
                 document.getElementById('airportname').scrollIntoView();
             }
-            
+
             // Interpolate between different values for Min CRFI calculation
             function interpolate(crosswind) {
                 if (crosswind <= 10){
@@ -512,5 +516,3 @@
 
 
     });
-
-

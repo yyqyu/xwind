@@ -16,18 +16,24 @@
 {% endif %}
 <div class="container">
 <div class="row">
-    <div class="col-10 mt-4">
+    <div class="col-12 mt-4">
+        <div id="intro" class="seen">
+        <h1 class = "open-sans-bolder centered" id="index_h1">Welcome to XWIND!</h1>
         <!-- works even while using /notams in index.html.. so this is not the reason...-->
-        <form method="post" id="stationform">
-            <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL" id="station">
-            
-            <label for="station" class="h6 sm-indication mt-1 ml-1">Request weather info by entering a single airport ICAO or IATA code </label>
+        <h2 class = "open-sans-font mt-5 smaller" id="index_h2a">XWIND is a free web app providing diverse tools to help make your operation smarter.</h2>
 
-        
-    </div>
-    <div class="col-2 mt-4">
-        <button type="submit" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
-    </form>
+        <h2 class = "open-sans-font mt-5 smaller" id="index_h2b">Crosswind calculation, CRFI limitations, weather highlighting, NOTAMs filtering, all data provided directly from ADDS or NavCanada servers</h2>
+        </div>
+        <div id="app" class="remove">
+            <h1 class="open-sans-bolder">Crosswind calculation<h1>
+        </div>
+        <form method="post" id="stationform">
+             <label for="station" class="h6 sm-indication mt-3 ml-1">Request weather info by entering a <strong>single</strong> airport ICAO or IATA code </label>
+            <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL" id="station"><button type="submit" id="send_ajax" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
+        </form>
+
+
+
     </div>
 </div>
 
@@ -35,7 +41,7 @@
 
         <!-- loading spinner, enabled and disabled by javascript-->
         <div class="mt-6 col-12 d-flex justify-content-center remove" id="loading">
-                <div class="spinner-grow text-primary" role="status">
+                <div class="spinner-border text-primary" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
         </div>

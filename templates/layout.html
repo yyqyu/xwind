@@ -3,8 +3,10 @@
 <html lang="en">
 
     <head>
+{% if active_page != login or register %}
         <!--<script src="../static/js/importantscripts.js" type="application/javascript"></script>-->
         <!-- Global site tag (gtag.js) - Google Analytics -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TBXFQP3BMZ"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -13,6 +15,7 @@
 
   gtag('config', 'G-TBXFQP3BMZ');
 </script>
+{% endif %}
         <meta charset="utf-8">
 
         <link rel="apple-touch-icon" sizes="152x152" href="../static/media/favicon/apple-touch-icon.png">
@@ -27,6 +30,8 @@
 
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="../static/css/bootstrap.min.css">
         <link href="../static/css/style.css" rel="stylesheet">
 
@@ -36,16 +41,18 @@
 
         <title>XWIND{% block title %}{% endblock %}</title>
 
-        <meta name="description" content="Xwind is there to help make your operation smarter. Xwind is a free online weather and NOTAMs provider.
-        Crosswind calculation,weather highlighting,  CRFI limitations, and NOTAMs filtering and ranking are there to help you operate smarter and safer."/>
+        <meta name="description" content="XWIND is there to help make your operation smarter. Xwind is a free online weather and NOTAMs provider.
+        Crosswind calculation, weather highlighting, CRFI limitations, and NOTAMs filtering and ranking are there to help you operate smarter and safer."/>
 
     </head>
 
-    <body class="asap-font">
+    <body class="open-sans-font">
+        {% if active_page != login or register %}
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXB7L33"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
+        {% endif %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="/">

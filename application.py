@@ -16,7 +16,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from xwind import (last_metar_raw, last_taf_raw, get_name, runways,
                    wind_direction, format_taf, wind_strength,
                    weather_times, weather_types, get_ident, headings,
-                   runways_data, get_code, get_notams, metar_raw)
+                   runways_data, get_code, get_notams, metar_raw, taf_raw)
 
 # Configure application
 app = Flask(__name__)
@@ -171,8 +171,9 @@ def weather_app():
         # Will be in original order
         ident_list.append(ident)
         airport_names.append(get_name(ident))
-    weather_list = metar_raw(ident_list)
-    return jsonify(weather_list, airport_names, ident_list)
+    metar_list = metar_raw(ident_list)
+    taf_list = taf_raw(ident_list)
+    return jsonify(metar_list, taf_list, airport_names, ident_list)
 
 
 @app.route("/register", methods=["GET", "POST"])

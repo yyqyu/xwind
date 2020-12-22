@@ -16,18 +16,14 @@
 {% endif %}
 <div class="container">
     <div class="row">
-        <div class="col-10 mt-4">
-            <!-- works even while using /notams in index.html.. so this is not the reason...-->
+        <div class="col-12 mt-4">
+            <h1 class = "open-sans-bolder">Notams</h1>
             <form method="post" id="stationform">
-                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL JFK EGLL" id="station">
-                
-                <label for="station" class="h6 sm-indication mt-1 ml-1">Request notam info by entering any number of ICAO or IATA codes. Separated by <strong>spaces</strong></label>
-    
-            
-        </div>
-        <div class="col-2 mt-4">
-            <button type="submit" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
-        </form>
+                <label for="station" class="h6 sm-indication mt-3 ml-1">Request notam info by entering any number of ICAO or IATA codes. Separated by <strong>spaces</strong></label>
+
+                <input class="form-control form-control-lg" autocomplete="off" autofocus type="text" name="station" type="text" placeholder="ex: CYUL JFK EGLL" id="station"><button type="submit" id="send_ajax" class="tn btn-outline-dark btn-sm ml-4 rounded">Submit</button>
+
+            </form>
         </div>
     </div>
     <!--
@@ -48,7 +44,7 @@
 
             <!-- loading spinner, enabled and disabled by javascript-->
             <div class="mt-6 col-12 d-flex justify-content-center remove" id="loading">
-                    <div class="spinner-grow text-primary" role="status">
+                    <div class="spinner-border text-primary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
             </div>

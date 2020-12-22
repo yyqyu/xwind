@@ -16,6 +16,42 @@ html { scroll-behavior: smooth; }
     font-size: 85%;
 }
 
+.arvo-font {
+    font-family: 'Arvo', serif;
+
+}
+
+.open-sans-font {
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+.arvo-font-bolder {
+    font-family: 'Arvo', serif;
+    font-weight: bolder;
+}
+
+.open-sans-bolder {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+}
+
+.smaller {
+    font-size: 140%;
+}
+
+main {
+    min-height: 67vh;
+}
+
+#index_h1 {
+    margin-bottom: 1.5em;
+}
+
+h2:nth-of-type(2) {
+    margin-bottom: 2em;
+}
+
 a.white-hover:link {
     color: black;
     text-decoration: none;
@@ -86,7 +122,7 @@ a.white-hover:active {
 
 .remove {
     display:none !important;
-    visibility: collapse;
+    visibility: hidden;
 }
 
 .seen {
@@ -104,11 +140,20 @@ a.white-hover:active {
     margin-top: 10rem;
 }
 
+.spinner-border {
+    display: inline-flex;
+    width: 10rem;
+    height: 10rem;
+    margin-top: 10rem;
+    transition: 0.3s all ease;
+}
+
 mark {
     background-color: #2e67b1;
     color: white;
     padding: 0.11em 0.25em;
     border-radius: 0.5em;
+    transition: 0.3s all ease;
 }
 
 
@@ -178,6 +223,7 @@ mark {
 
 #wxtypeandtime{
     vertical-align: middle;
+    cursor: default;
 }
 
 #backtotop {
@@ -207,17 +253,30 @@ mark {
 
 #w-direction {
     vertical-align: middle;
+    transition: 0.3s all ease;
+}
+
+#w-direction:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.35);
+    transition: 0.3s all ease;
 }
 
 #w-strength {
     vertical-align: middle;
+    transition: 0.3s all ease;
 }
+
+#w-strength:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.35);
+}
+
 
 .rounded {
     border-radius: 10px;
     border: none;
     box-shadow: 0px 0px 5px lightgrey;
     padding: 10px;
+    transition: 0.3s all ease;
 }
 
 .rounded:hover {
@@ -227,7 +286,7 @@ mark {
     border-radius: 10px;
 }
 
-#notam_container {
+#notam_container, #weather_container {
     font-size:12px;
     white-space: pre-line;
 }
@@ -248,7 +307,7 @@ mark {
     font-size: 90%;
 }
 
-.notam:hover {
+.notam:hover, .weather:hover {
     box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.45);
 }
 
@@ -268,7 +327,17 @@ mark {
     transition: all ease 0.3s;
 }
 
+.weather:hover .clipboard  {
+    visibility: visible;
+    opacity: 1;
+    transition: all ease 0.3s;
+}
+
 .notam:hover {
+    cursor: pointer;
+}
+
+.weather:hover {
     cursor: pointer;
 }
 
@@ -283,6 +352,7 @@ mark {
     top: 40px;
     right: 20px;
     transition: all ease 0.3s;
+    z-index: 800;
 }
 
 h4:first-of-type {
@@ -327,6 +397,18 @@ strong {
     display: inline-block;
 }
 
+.weather_p {
+    width: 85%;
+    margin: 0;
+}
+
+.rounded-corners {
+    border-radius: 1em;
+}
+
+.form-group label {
+    font-size: 80%;
+}
 
 @media only screen and (max-width: 780px) {
     #wx {

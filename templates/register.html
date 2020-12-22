@@ -5,21 +5,24 @@
 {% endblock %}
 
 {% block main %}
-<div class="container">  
+<div class="container">
 
 <div class="row">
     <div class="col-6 centered mt-4">
         <form action="/register" method="post" id="registration" class="needs-validation" novalidate>
             <div class="form-group">
-                <input autocomplete="off" required autofocus class="form-control" id="usrchk" name="username" placeholder="Username" type="text">
+                <label for="usrchk">Username:</label>
+                <input autocomplete="off" required autofocus class="form-control rounded-corners" id="usrchk" name="username" placeholder="Username" type="text">
                 <div class="invalid-feedback" id="usrinval">Username is not available</div>
             </div>
             <div class="form-group">
-                <input class="form-control" required name="password" placeholder="Password" type="password">
+                <label for="password">Enter a password:</label>
+                <input class="form-control rounded-corners" required name="password" placeholder="Password" type="password" id="password">
                 <div class="invalid-feedback">Please enter a password</div>
             </div>
             <div class="form-group">
-                <input class="form-control" required name="confirmation" placeholder="Confirm password" type="password">
+                <label for="confirmation">Re-enter your password</label>
+                <input class="form-control rounded-corners" required name="confirmation" placeholder="Confirm password" type="password">
                 <div class="invalid-feedback">Please confirm the password </div>
             </div>
             <br>
@@ -37,4 +40,3 @@
 
 
 {% endblock %}
-

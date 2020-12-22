@@ -99,7 +99,7 @@
                     notamToCopy = notamToCopy.replace(regex, "\n");
                     // The code for the clipboard image will be present, so counting backwards from where
                     // it is found.
-                    imgcount = notamToCopy.search("<img");
+                    var imgcount = notamToCopy.search("<img");
                     notamToCopy = notamToCopy.substring(0, imgcount-1);
                     copyToClipBoard(notamToCopy);
                     document.getElementById(tooltipNumber).style.display = "inline";
