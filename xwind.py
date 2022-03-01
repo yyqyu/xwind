@@ -21,7 +21,7 @@ from webscraper_faa import query_faa
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei')
+db = SQL('postgresql://ohbzghuvifbqji:98678bba7c0ad4692d193d6c97d03c372a1e1de1637bb0d4196e6dfa7e2a6b99@ec2-52-207-74-100.compute-1.amazonaws.com:5432/d5gb21to36p7kt')
 
 # db = SQL("sqlite:///xwind.db")
 
@@ -503,7 +503,7 @@ def weather_types(ident):
 def runways(code):
     runway_list = []
     rwys = db.execute(
-        "SELECT le_ident, xhe_ident "
+        "SELECT le_ident, he_ident "
         "FROM runways "
         "WHERE airport_ref=:code AND closed='0' "
         "ORDER BY length_ft DESC", code=code)
@@ -537,7 +537,7 @@ def runways_data(code):
 def headings(code):
     headings_list = []
     headings = db.execute(
-        'SELECT "le_heading_degT", "xhe_heading_degT" '
+        'SELECT "le_heading_degT", "he_heading_degT" '
         "FROM runways "
         "WHERE airport_ref=:code AND closed='0' "
         "ORDER BY length_ft DESC", code=code)

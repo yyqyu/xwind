@@ -102,7 +102,7 @@ def after_request(response):
     return response
 
 
-db = SQL('postgres://yslseapkhkqvfs:1296eb1622d1fc4fdc7864b5109102138cb7c3092199afdc7b747e5fd0b36bde@ec2-54-221-214-183.compute-1.amazonaws.com:5432/dau286g9ftm2ei')
+db = SQL('postgresql://ohbzghuvifbqji:98678bba7c0ad4692d193d6c97d03c372a1e1de1637bb0d4196e6dfa7e2a6b99@ec2-52-207-74-100.compute-1.amazonaws.com:5432/d5gb21to36p7kt')
 
 # db = SQL("sqlite:///xwind.db")
 
@@ -176,38 +176,38 @@ def weather_app():
     return jsonify(metar_list, taf_list, airport_names, ident_list)
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == 'GET':
-        return render_template("register.html")
-    if request.method == 'POST':
-        # Checking for invalid fields or users already exist
-        if not request.form.get("username") or not request.form.get("password") or not request.form.get("confirmation"):
-            flash('Please provide your username and password to register', "danger")
-            return redirect('/register')
-        else:
-            if request.form.get("password") != request.form.get("confirmation"):
-                flash('You did not enter your password correctly twice', "danger")
-                return redirect('/register')
+# @app.route("/register", methods=["GET", "POST"])
+# def register():
+#     if request.method == 'GET':
+#         return render_template("register.html")
+#     if request.method == 'POST':
+#         # Checking for invalid fields or users already exist
+#         if not request.form.get("username") or not request.form.get("password") or not request.form.get("confirmation"):
+#             flash('Please provide your username and password to register', "danger")
+#             return redirect('/register')
+#         else:
+#             if request.form.get("password") != request.form.get("confirmation"):
+#                 flash('You did not enter your password correctly twice', "danger")
+#                 return redirect('/register')
 
-            username = request.form.get("username")
+#             username = request.form.get("username")
 
-            try:
-                if username == db.execute("SELECT username FROM users WHERE username = :username",
-                                          username=username)[0]["username"]:
-                    flash('Username already exists, please log in using your password', "warning")
-                    return redirect("/register")
-            except Exception:
-                # Store the PW hash and username into database
-                pw_hash = generate_password_hash(request.form.get("password"))
-                db.execute("INSERT INTO users (username, hash, permission_level) VALUES (:username, :pw_hash, '0')",
-                           username=username, pw_hash=pw_hash)
+#             try:
+#                 if username == db.execute("SELECT username FROM users WHERE username = :username",
+#                                           username=username)[0]["username"]:
+#                     flash('Username already exists, please log in using your password', "warning")
+#                     return redirect("/register")
+#             except Exception:
+#                 # Store the PW hash and username into database
+#                 pw_hash = generate_password_hash(request.form.get("password"))
+#                 db.execute("INSERT INTO users (username, hash, permission_level) VALUES (:username, :pw_hash, '0')",
+#                            username=username, pw_hash=pw_hash)
 
-                # Consider the user as being logged in after being registered
-                session["user_id"] = db.execute("SELECT id FROM users WHERE username = :username",
-                                                username=username)[0]["id"]
-                flash('You have been successfully registered', 'danger')
-                return redirect("/")
+#                 # Consider the user as being logged in after being registered
+#                 session["user_id"] = db.execute("SELECT id FROM users WHERE username = :username",
+#                                                 username=username)[0]["id"]
+#                 flash('You have been successfully registered', 'danger')
+#                 return redirect("/")
 
 @app.route("/check", methods=["GET"])
 def check():
