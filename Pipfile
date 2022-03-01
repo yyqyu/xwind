@@ -26,4 +26,4 @@ Werkzeug = "==0.16.0"
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.9.10"
