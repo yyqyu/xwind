@@ -1,6 +1,9 @@
 # Create apip install -r requirements.txt new virtualenv named "myproject"
 # Python 3.3+
+apt-get install python3.9-venv
 $ python3 -m venv myproject
+
+
 
 # Activate the virtualenv (OS X & Linux)  (need to do each time I work on project)
 $ source myproject/bin/activate
